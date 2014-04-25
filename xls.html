@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <div id="questionCell" style="font-size:x-large">Loading...</div>
+    <br />
+    <div id="excelDiv" style="width: 1000px; height: 600px"></div>
+    <button onclick="btnNextClick()">Next >></button>
+    <script type="text/javascript" src="http://r.office.microsoft.com/r/rlidExcelWLJS?v=1&kip=1"></script>
+    <script type="text/javascript">
+        /*
+	     * This code uses the Microsoft Office Excel Javascript object model to programmatically insert the
+	     * Excel Web App into a div with id=excelDiv. The full API is documented at
+	     * http://msdn.microsoft.com/en-US/library/hh315812.aspx.
+	     */
+        var ewa = null; //the Excel Services Web Part
+        var questionCell = null; //the cell to be labeled, as a string eg "'Sheet1'!C3"
+        var labels = []; //list with the labels the user has clicked, each represented as a string "'Sheet1'!C3"
+
+        // run the Excel load handler on page load
+        if (window.attachEvent) {
+            window.attachEvent("onload", loadEwaOnPageLoad);
+        } else {
+            window.addEventListener("DOMContentLoaded", loadEwaOnPageLoad, false);
+        }
+
+        function loadEwaOnPageLoad() {
+            loadAnExcel(); //TODO: Select a random excel 
+        }
+
+        function loadAnExcel() {
+            var fileToken = "SD72E74B1ABFC5464!174/517479313637659748/t=0&s=0&v=!AJSE_-A1i3_eaC8";
+
+            var props = {
+                uiOptions: {
+                    showGridlines: true,
+                    showRowColumnHeaders: true,
+                    selectedCell: "'Sheet1'!C3", //TODO: select a random cell
+                    showParametersTaskPane: true
+                },
+                interactivityOptions: {
+                    allowTypingAndFormulaEntry: true,
+                    allowParameterModification: false,
+                    allowSorting: false,
+                    allowFiltering: false,
+                    allowPivotTableInteractivity: false
+                }
+            };
+
+            Ewa.EwaControl.loadEwaAsync(fileToken, "excelDiv", props, onExcelLoaded);
+        }
+
+        function onExcelLoaded(result) {
+            ewa = Ewa.EwaControl.getInstances().getItem(0);
+
+            selectQuestionCell();
+            // Add  event handler for the cell change event
+            ewa.add_activeCellChanged(onCellSelectionChange);
+        }
+
+        function selectQuestionCell() {
+            //    var currentSheet = ewa.getActiveWorkbook().getActiveSheet().getName();
+            //    var range = ewa.getActiveWorkbook().getRange(currentSheet, 0,0,1,1);
+            //    range.activateAsync(0, 0, rangeActivated, null);
+            questionCell = ewa.getActiveWorkbook().getActiveCell().getAddressA1();
+            //set value to hidden!A1 to make confitional formatting color the questionCell
+            ewa.getActiveWorkbook().getRangeA1Async("hidden!A1", setHiddenValue, questionCell);
+            //set header question
+            ewa.getActiveWorkbook().getActiveCell().getValuesAsync(1, setQuestionCellHeader, null);
+        }
+
+        function setQuestionCellHeader(asyncResult) {
+            document.getElementById("questionCell").innerHTML = "What is " + asyncResult.getReturnValue()[0][0] + " in " + questionCell + "?";
+        }
+
+        //function rangeActivated() {
+        //}
+
+        // Handle the active cell changed event.
+        function onCellSelectionChange(rangeArgs) {
+            labels[labels.length] = ewa.getActiveWorkbook().getActiveCell().getAddressA1(); //TODO! only if it is not because of sheet change
+            colorSelectedLabel();
+            document.getElementById("results").innerHTML = getLabelsStr("<br>");
+        }
+
+        function colorSelectedLabel() {
+            //Formatting changes are not supported by the api!
+            //What we do instead is apply conditional formatting to cells, using formula =NOT(ISERROR(FIND(SUBSTITUTE(TEXT(ADDRESS(ROW(),COLUMN()), ""), "$",""),hidden!$A$1)))
+            ewa.getActiveWorkbook().getRangeA1Async("hidden!A2", setHiddenValue, getLabelsStr(","));
+        }
+
+        function setHiddenValue(asyncResult) {
+            asyncResult.getReturnValue().setValuesAsync([[asyncResult.getUserContext()]], setRangeValues, null);
+        }
+
+        function setRangeValues(asyncResult) {
+        }
+
+        function getLabelsStr(delimeter) {
+            var labelsList = "";
+            for (var i = 0; i < labels.length; i++) {
+                labelsList += labels[i] + delimeter;
+            };
+            return labelsList;
+        }
+
+        function btnNextClick() {
+            //loadAnExcel();
+        }
+
+    </script>
+
+    <div id="results"></div>
+    </body>
+</html>
