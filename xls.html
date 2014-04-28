@@ -18,7 +18,7 @@
         var ewa = null; //the Excel Services Web Part
         var questionCell = null; //the cell to be labeled, as a string eg "'Sheet1'!C3"
         var labels = []; //list with the labels the user has clicked, each represented as a string "'Sheet1'!C3"
-
+        
         // run the Excel load handler on page load
         if (window.attachEvent) {
             window.attachEvent("onload", loadEwaOnPageLoad);
@@ -80,9 +80,21 @@
 
         // Handle the active cell changed event.
         function onCellSelectionChange(rangeArgs) {
-            labels[labels.length] = ewa.getActiveWorkbook().getActiveCell().getAddressA1(); //TODO! only if it is not because of sheet change
+            updateLabels(ewa.getActiveWorkbook().getActiveCell());
             colorSelectedLabel();
             document.getElementById("results").innerHTML = getLabelsStr("<br>");
+        }
+
+        function updateLabels(cell) {
+            var cellAddr = cell.getAddressA1().split("!")[1];
+            var index = labels.indexOf(cellAddr);
+            if (index >= 0){ //Cell already in list, de-selected
+                labels.splice(labels.indexOf(cellAddr), 1);
+            }
+            else { //Cell selected
+                labels[labels.length] = cellAddr;
+            }
+            //TODO! only if it is not because of sheet change
         }
 
         function colorSelectedLabel() {
