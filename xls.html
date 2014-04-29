@@ -15,6 +15,11 @@
 	     * Excel Web App into a div with id=excelDiv. The full API is documented at
 	     * http://msdn.microsoft.com/en-US/library/hh315812.aspx.
 	     */
+
+        //TODO on spredsheets: 
+        //- Seperate worksheets in different files
+        //- Add hidden worksheet named hidden
+        //- Add the 2 conditional formating rules
         var ewa = null; //the Excel Services Web Part
         var questionCell = null; //the cell to be labeled, as a string eg "'Sheet1'!C3"
         var labels = []; //list with the labels the user has clicked, each represented as a tuple eg "C3, value"
@@ -57,22 +62,23 @@
 
             selectQuestionCell();
             // Add  event handler for the cell change event
-            ewa.add_activeCellChanged(onCellSelectionChange);
+            //ewa.add_activeCellChanged(onCellSelectionChange);
+            ewa.add_activeSelectionChanged(onCellSelectionChange);
         }
 
         function selectQuestionCell() {
             //    var currentSheet = ewa.getActiveWorkbook().getActiveSheet().getName();
             //    var range = ewa.getActiveWorkbook().getRange(currentSheet, 0,0,1,1);
             //    range.activateAsync(0, 0, rangeActivated, null);
-            questionCell = ewa.getActiveWorkbook().getActiveCell().getAddressA1();
+            questionCell = ewa.getActiveWorkbook().getActiveCell();
             //set value to hidden!A1 to make confitional formatting color the questionCell
-            ewa.getActiveWorkbook().getRangeA1Async("hidden!A1", setHiddenValue, questionCell);
+            ewa.getActiveWorkbook().getRangeA1Async("hidden!A1", setHiddenValue, questionCell.getAddressA1());
             //set header question
-            ewa.getActiveWorkbook().getActiveCell().getValuesAsync(1, setQuestionCellHeader, null);
+            questionCell.getValuesAsync(1, setQuestionCellHeader, null);
         }
 
         function setQuestionCellHeader(asyncResult) {
-            document.getElementById("questionCell").innerHTML = "What is " + asyncResult.getReturnValue()[0][0] + " in " + questionCell + "?";
+            document.getElementById("questionCell").innerHTML = "What is " + asyncResult.getReturnValue()[0][0] + " in " + questionCell.getAddressA1() + "?";
         }
 
         //function rangeActivated() {
@@ -81,6 +87,7 @@
         // TODO: can we use the javascript click event handler?
         // Handle the active cell changed event.
         function onCellSelectionChange(rangeArgs) {
+            //TODO: support for multiple cell selection
             var cell = ewa.getActiveWorkbook().getActiveCell();
             cell.getValuesAsync(1, updateLabels, cell);
         }
