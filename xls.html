@@ -6,7 +6,7 @@
 <body>
     <div id="questionCell" style="font-size:x-large">Loading...</div>
     <br />
-    <div id="excelDiv" style="width: 1000px; height: 600px"></div>
+    <div id="excelDiv" style="width: 1000px; height: 300px"></div>
     <button onclick="btnNextClick()">Next >></button>
     <script type="text/javascript" src="http://r.office.microsoft.com/r/rlidExcelWLJS?v=1&kip=1"></script>
     <script type="text/javascript">
@@ -17,7 +17,7 @@
 	     */
         var ewa = null; //the Excel Services Web Part
         var questionCell = null; //the cell to be labeled, as a string eg "'Sheet1'!C3"
-        var labels = []; //list with the labels the user has clicked, each represented as a string "'Sheet1'!C3"
+        var labels = []; //list with the labels the user has clicked, each represented as a tuple eg "C3, value"
         
         // run the Excel load handler on page load
         if (window.attachEvent) {
@@ -78,26 +78,37 @@
         //function rangeActivated() {
         //}
 
+        // TODO: can we use the javascript click event handler?
         // Handle the active cell changed event.
         function onCellSelectionChange(rangeArgs) {
-            updateLabels(ewa.getActiveWorkbook().getActiveCell());
-            colorSelectedLabel();
-            document.getElementById("results").innerHTML = getLabelsStr("<br>");
+            var cell = ewa.getActiveWorkbook().getActiveCell();
+            cell.getValuesAsync(1, updateLabels, cell);
         }
 
-        function updateLabels(cell) {
-            var cellAddr = cell.getAddressA1().split("!")[1];
-            var index = labels.indexOf(cellAddr);
-            if (index >= 0){ //Cell already in list, de-selected
-                labels.splice(labels.indexOf(cellAddr), 1);
+        function updateLabels(asyncResult) {
+            var cellAddr = asyncResult.getUserContext().getAddressA1().split("!")[1];
+            var index = indexOfLabel(cellAddr);
+            if (index >= 0) { //Cell already in list, de-selected -> remove from labels
+                labels.splice(index, 1);
             }
-            else { //Cell selected
-                labels[labels.length] = cellAddr;
+            else { //Cell selected -> add to labels
+                labels[labels.length] = [cellAddr, asyncResult.getReturnValue()[0][0]];
             }
+            updateLabelColors();
+            document.getElementById("results").innerHTML = getLabelsStr("<br>");
             //TODO! only if it is not because of sheet change
         }
 
-        function colorSelectedLabel() {
+        function indexOfLabel(cellAddr) {
+            for (var i = 0; i < labels.length; i++) {
+                if (labels[i][0] == cellAddr) {
+                    return(i);
+                }
+            }
+            return(-1);
+        }
+
+        function updateLabelColors() {
             //Formatting changes are not supported by the api!
             //What we do instead is apply conditional formatting to cells, using formula =NOT(ISERROR(FIND(SUBSTITUTE(TEXT(ADDRESS(ROW(),COLUMN()), ""), "$",""),hidden!$A$1)))
             ewa.getActiveWorkbook().getRangeA1Async("hidden!A2", setHiddenValue, getLabelsStr(","));
@@ -113,7 +124,7 @@
         function getLabelsStr(delimeter) {
             var labelsList = "";
             for (var i = 0; i < labels.length; i++) {
-                labelsList += labels[i] + delimeter;
+                labelsList += labels[i][0] + delimeter;
             };
             return labelsList;
         }
