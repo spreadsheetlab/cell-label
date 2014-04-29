@@ -46,7 +46,7 @@
                     showParametersTaskPane: true
                 },
                 interactivityOptions: {
-                    allowTypingAndFormulaEntry: true,
+                    allowTypingAndFormulaEntry: false,
                     allowParameterModification: false,
                     allowSorting: false,
                     allowFiltering: false,
@@ -72,7 +72,7 @@
             //    range.activateAsync(0, 0, rangeActivated, null);
             questionCell = ewa.getActiveWorkbook().getActiveCell();
             //set value to hidden!A1 to make confitional formatting color the questionCell
-            ewa.getActiveWorkbook().getRangeA1Async("hidden!A1", setHiddenValue, questionCell.getAddressA1());
+            ewa.getActiveWorkbook().getRangeA1Async("hidden!A1", setHiddenValue, questionCell.getAddressA1() + ",");
             //set header question
             questionCell.getValuesAsync(1, setQuestionCellHeader, null);
         }
@@ -84,7 +84,6 @@
         //function rangeActivated() {
         //}
 
-        // TODO: can we use the javascript click event handler?
         // Handle the active cell changed event.
         function onCellSelectionChange(rangeArgs) {
             //TODO: support for multiple cell selection
@@ -117,7 +116,7 @@
 
         function updateLabelColors() {
             //Formatting changes are not supported by the api!
-            //What we do instead is apply conditional formatting to cells, using formula =NOT(ISERROR(FIND(SUBSTITUTE(TEXT(ADDRESS(ROW(),COLUMN()), ""), "$",""),hidden!$A$1)))
+            //What we do instead is apply conditional formatting to cells, using formula =NOT(ISERROR(FIND(SUBSTITUTE(TEXT(ADDRESS(ROW(),COLUMN()), "")&",", "$",""),hidden!$A$2)))
             ewa.getActiveWorkbook().getRangeA1Async("hidden!A2", setHiddenValue, getLabelsStr(","));
         }
 
