@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title></title>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 <body>
     <div id="questionCell" style="font-size:x-large">Loading...</div>
@@ -20,8 +21,9 @@
         //- Seperate worksheets in different files
         //- Add hidden worksheet named hidden
         //- Add the 2 conditional formating rules
-        var ewa = null; //the Excel Services Web Part
-        var questionCell = null; //the cell to be labeled, as a string eg "'Sheet1'!C3"
+        var spToken = null; //the SkyDrive filetoken string
+        var workbook = null //the active workbook
+        var questionCell = null; //the cell to be labeled
         var labels = []; //list with the labels the user has clicked, each represented as a tuple eg "C3, value"
         
         // run the Excel load handler on page load
@@ -36,7 +38,7 @@
         }
 
         function loadAnExcel() {
-            var fileToken = "SD72E74B1ABFC5464!174/517479313637659748/t=0&s=0&v=!AJSE_-A1i3_eaC8";
+            spToken = "SD72E74B1ABFC5464!174/517479313637659748/t=0&s=0&v=!AJSE_-A1i3_eaC8";
 
             var props = {
                 uiOptions: {
@@ -54,11 +56,12 @@
                 }
             };
 
-            Ewa.EwaControl.loadEwaAsync(fileToken, "excelDiv", props, onExcelLoaded);
+            Ewa.EwaControl.loadEwaAsync(spToken, "excelDiv", props, onExcelLoaded);
         }
 
         function onExcelLoaded(result) {
-            ewa = Ewa.EwaControl.getInstances().getItem(0);
+            var ewa = Ewa.EwaControl.getInstances().getItem(0); //the Excel Services Web Part
+            workbook = ewa.getActiveWorkbook();
 
             selectQuestionCell();
             // Add  event handler for the cell change event
@@ -67,12 +70,12 @@
         }
 
         function selectQuestionCell() {
-            //    var currentSheet = ewa.getActiveWorkbook().getActiveSheet().getName();
-            //    var range = ewa.getActiveWorkbook().getRange(currentSheet, 0,0,1,1);
+            //    var currentSheet = workbook.getActiveSheet().getName();
+            //    var range = workbook.getRange(currentSheet, 0,0,1,1);
             //    range.activateAsync(0, 0, rangeActivated, null);
-            questionCell = ewa.getActiveWorkbook().getActiveCell();
+            questionCell = workbook.getActiveCell();
             //set value to hidden!A1 to make confitional formatting color the questionCell
-            ewa.getActiveWorkbook().getRangeA1Async("hidden!A1", setHiddenValue, questionCell.getAddressA1() + ",");
+            workbook.getRangeA1Async("hidden!A1", setHiddenValue, questionCell.getAddressA1() + ",");
             //set header question
             questionCell.getValuesAsync(1, setQuestionCellHeader, null);
         }
@@ -87,7 +90,7 @@
         // Handle the active cell changed event.
         function onCellSelectionChange(rangeArgs) {
             //TODO: support for multiple cell selection
-            var cell = ewa.getActiveWorkbook().getActiveCell();
+            var cell = workbook.getActiveCell();
             cell.getValuesAsync(1, updateLabels, cell);
         }
 
@@ -117,7 +120,7 @@
         function updateLabelColors() {
             //Formatting changes are not supported by the api!
             //What we do instead is apply conditional formatting to cells, using formula =NOT(ISERROR(FIND(SUBSTITUTE(TEXT(ADDRESS(ROW(),COLUMN()), "")&",", "$",""),hidden!$A$2)))
-            ewa.getActiveWorkbook().getRangeA1Async("hidden!A2", setHiddenValue, getLabelsStr(","));
+            workbook.getRangeA1Async("hidden!A2", setHiddenValue, getLabelsStr(","));
         }
 
         function setHiddenValue(asyncResult) {
@@ -136,7 +139,20 @@
         }
 
         function btnNextClick() {
-            //loadAnExcel();
+            postData()
+        }
+
+        function postData() {
+            var posting = $.post("get.aspx", {
+                spreadsheet: workbook.getWorkbookPath(),
+                spToken: spToken,
+                cell: questionCell.getAddressA1(),
+                labels: labels
+            });
+
+            //posting.done(function (data) {
+            //    alert("done!");
+            //});
         }
 
     </script>
