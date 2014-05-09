@@ -16,12 +16,7 @@
 	     * Excel Web App into a div with id=excelDiv. The full API is documented at
 	     * http://msdn.microsoft.com/en-US/library/hh315812.aspx.
 	     */
-
-        //TODO on spredsheets: 
-        //- Seperate worksheets in different files
-        //- Add hidden worksheet named hidden
-        //- Add the 2 conditional formating rules
-        var spToken = null; //the SkyDrive filetoken string
+        var xlsToken = null; //the SkyDrive filetoken string
         var workbook = null //the active workbook
         var questionCell = null; //the cell to be labeled
         var labels = []; //list with the labels the user has clicked, each represented as a tuple eg "C3, value"
@@ -34,11 +29,36 @@
         }
 
         function loadEwaOnPageLoad() {
-            loadAnExcel(); //TODO: Select a random excel 
+            //xlsToken = "SD72E74B1ABFC5464!174/517479313637659748/t=0&s=0&v=!AJSE_-A1i3_eaC8";
+            //xlsToken = "SD72E74B1ABFC5464!194/517479313637659748/t=0&s=0";
+            postData();
         }
 
-        function loadAnExcel() {
-            spToken = "SD72E74B1ABFC5464!174/517479313637659748/t=0&s=0&v=!AJSE_-A1i3_eaC8";
+        function btnNextClick() {
+            postData()
+        }
+
+        function postData() {
+            var data = {};
+
+            if (labels.length > 0) {
+                data = {
+                    spreadsheet: workbook.getWorkbookPath(),
+                    xlsToken: xlsToken,
+                    cell: questionCell.getAddressA1(),
+                    labels: labels
+                };
+            }
+
+            posting = $.post("get.aspx", data);
+
+            posting.done(function (resp) {
+                xlsToken = resp.xls;
+                loadExcel(xlsToken);
+            });
+        }
+
+        function loadExcel(token) {
 
             var props = {
                 uiOptions: {
@@ -56,7 +76,7 @@
                 }
             };
 
-            Ewa.EwaControl.loadEwaAsync(spToken, "excelDiv", props, onExcelLoaded);
+            Ewa.EwaControl.loadEwaAsync(token, "excelDiv", props, onExcelLoaded);
         }
 
         function onExcelLoaded(result) {
@@ -138,25 +158,66 @@
             return labelsList;
         }
 
-        function btnNextClick() {
-            postData()
-        }
-
-        function postData() {
-            var posting = $.post("get.aspx", {
-                spreadsheet: workbook.getWorkbookPath(),
-                spToken: spToken,
-                cell: questionCell.getAddressA1(),
-                labels: labels
-            });
-
-            //posting.done(function (data) {
-            //    alert("done!");
-            //});
-        }
-
     </script>
 
     <div id="results"></div>
     </body>
 </html>
+
+<!--
+        //TODO on spredsheets: 
+        //- Seperate worksheets in different files
+        //- Add hidden worksheet named hidden
+        //- Add the 2 conditional formating rules
+
+    then:
+    
+    1. Add xls files to corpus skyDrive folder
+    2. Make them all public (otherwise, the file token will require an authid which we cannot obtain programnmatically)
+    3. In http://isdk.dev.live.com/dev/isdk/ISDK.aspx?category=scenarioGroup_core_concepts&index=0 run code:
+    
+WL.init({ client_id: clientId, redirect_uri: redirectUri });
+
+WL.login({ "scope": "wl.skydrive" }).then(
+    function(response) {
+        getFiles();
+    },
+    function(response) {
+        log("Could not connect, status = " + response.status);
+    }
+);
+
+function getFiles() {
+    var files_path = "folder.072e74b1abfc5464.72E74B1ABFC5464!190/files";
+    WL.api({ path: files_path, method: "GET" }).then(
+        onGetFilesComplete,
+        function(response) {
+            log("Cannot get files and folders: " +
+                JSON.stringify(response.error).replace(/,/g, ",\n"));
+        }
+    );
+}
+
+function onGetFilesComplete(response) {
+    var items = response.data;
+    for (var i = 0; i < items.length; i++) {
+        log(items[i].name + "#" + items[i].id)
+               // JSON.stringify(items[i]).replace(/,/g, ",\n"));
+       // if (items[i].type === "folder") {
+       //     log("Found a folder with the following information: " +
+       //         JSON.stringify(items[i]).replace(/,/g, ",\n"));
+       //     foundFolder = 1;
+       //     break;
+       // }
+    }
+}
+                     
+function log(message) {
+    var child = document.createTextNode(message);
+    var parent = document.getElementById('JsOutputDiv') || document.body;
+    parent.appendChild(child);
+    parent.appendChild(document.createElement("br"));
+}
+
+    4. Place result in input.txt
+-->
