@@ -7,7 +7,9 @@
 <body>
     <div id="questionCell" style="font-size:x-large">Loading...</div>
     <br />
-    <div id="excelDiv" style="width: 1000px; height: 300px"></div>
+    <div id="excelDivParent">
+        <div id="excelDiv"></div>
+    </div>
     <button onclick="btnNextClick()">Next >></button>
     <script type="text/javascript" src="http://r.office.microsoft.com/r/rlidExcelWLJS?v=1&kip=1"></script>
     <script type="text/javascript">
@@ -29,8 +31,6 @@
         }
 
         function loadEwaOnPageLoad() {
-            //xlsToken = "SD72E74B1ABFC5464!174/517479313637659748/t=0&s=0&v=!AJSE_-A1i3_eaC8";
-            //xlsToken = "SD72E74B1ABFC5464!194/517479313637659748/t=0&s=0";
             postData();
         }
 
@@ -75,6 +75,9 @@
                     allowPivotTableInteractivity: false
                 }
             };
+
+            $("#excelDiv").remove();
+            $("#excelDivParent").append("<div id=\"excelDiv\" style=\"width: 1000px; height: 300px\"></div>");
 
             Ewa.EwaControl.loadEwaAsync(token, "excelDiv", props, onExcelLoaded);
         }
