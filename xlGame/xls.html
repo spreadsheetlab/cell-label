@@ -35,7 +35,9 @@
         }
 
         function btnNextClick() {
-            postData()
+            postData();
+            labels = [];
+            document.getElementById("results").innerHTML = getLabelsStr("<br>");
         }
 
         function postData() {
@@ -83,7 +85,7 @@
         }
 
         function onExcelLoaded(result) {
-            var ewa = Ewa.EwaControl.getInstances().getItem(0); //the Excel Services Web Part
+            var ewa = Ewa.EwaControl.getInstances().getItem(Ewa.EwaControl.getInstances().getCount() - 1); //the Excel Services Web Part
             workbook = ewa.getActiveWorkbook();
 
             selectQuestionCell();
