@@ -10,7 +10,8 @@
     <div id="excelDivParent">
         <div id="excelDiv"></div>
     </div>
-    <button onclick="btnNextClick()">Next >></button>
+    <button onclick="btnNextClick()">Next workbook>></button>
+    <button onclick="btnNextCellClick()">Next cell>></button>
     <script type="text/javascript" src="http://r.office.microsoft.com/r/rlidExcelWLJS?v=1&kip=1"></script>
     <script type="text/javascript">
         /*
@@ -19,6 +20,7 @@
 	     * http://msdn.microsoft.com/en-US/library/hh315812.aspx.
 	     */
         var xlsToken = null; //the SkyDrive filetoken string
+        var ewa = null; //the Excel Services Web Part
         var workbook = null //the active workbook
         var questionCell = null; //the cell to be labeled
         var labels = []; //list with the labels the user has clicked, each represented as a tuple eg "C3, value"
@@ -30,17 +32,28 @@
             window.addEventListener("DOMContentLoaded", loadEwaOnPageLoad, false);
         }
 
+        function initCollectors() {
+            colorQuestionCell();
+            labels = [];
+            //de-color cells
+            workbook.getRangeA1Async("hidden!A2", setHiddenValue, "");
+            document.getElementById("results").innerHTML = "";
+        }
+
         function loadEwaOnPageLoad() {
-            postData();
+            postData(true);
         }
 
         function btnNextClick() {
-            postData();
-            labels = [];
-            document.getElementById("results").innerHTML = getLabelsStr("<br>");
+            postData(true);
         }
 
-        function postData() {
+        function btnNextCellClick() {
+            postData(false);
+            initCollectors();
+        }
+
+        function postData(changeXls) {
             var data = {};
 
             if (labels.length > 0) {
@@ -55,8 +68,12 @@
             posting = $.post("get.aspx", data);
 
             posting.done(function (resp) {
-                xlsToken = resp.xls;
-                loadExcel(xlsToken);
+                if (changeXls) {
+                    xlsToken = resp.xls;
+                    loadExcel(xlsToken);
+                } else {
+                    
+                }
             });
         }
 
@@ -66,7 +83,7 @@
                 uiOptions: {
                     showGridlines: true,
                     showRowColumnHeaders: true,
-                    selectedCell: "'Sheet1'!C3", //TODO: select a random cell
+                   // selectedCell: "'Sheet1'!C3", //TODO: select a random cell
                     showParametersTaskPane: true
                 },
                 interactivityOptions: {
@@ -85,20 +102,16 @@
         }
 
         function onExcelLoaded(result) {
-            var ewa = Ewa.EwaControl.getInstances().getItem(Ewa.EwaControl.getInstances().getCount() - 1); //the Excel Services Web Part
+            ewa = Ewa.EwaControl.getInstances().getItem(Ewa.EwaControl.getInstances().getCount() - 1);
             workbook = ewa.getActiveWorkbook();
-
-            selectQuestionCell();
             // Add  event handler for the cell change event
             //ewa.add_activeCellChanged(onCellSelectionChange);
             ewa.add_activeSelectionChanged(onCellSelectionChange);
+            initCollectors();
         }
 
-        function selectQuestionCell() {
-            //    var currentSheet = workbook.getActiveSheet().getName();
-            //    var range = workbook.getRange(currentSheet, 0,0,1,1);
-            //    range.activateAsync(0, 0, rangeActivated, null);
-            questionCell = workbook.getActiveCell();
+        function colorQuestionCell() {
+            questionCell = workbook.getRange(workbook.getActiveSheet().getName(), 1, 1, 1, 1);
             //set value to hidden!A1 to make confitional formatting color the questionCell
             workbook.getRangeA1Async("hidden!A1", setHiddenValue, questionCell.getAddressA1() + ",");
             //set header question
@@ -108,9 +121,6 @@
         function setQuestionCellHeader(asyncResult) {
             document.getElementById("questionCell").innerHTML = "What is " + asyncResult.getReturnValue()[0][0] + " in " + questionCell.getAddressA1() + "?";
         }
-
-        //function rangeActivated() {
-        //}
 
         // Handle the active cell changed event.
         function onCellSelectionChange(rangeArgs) {
@@ -126,7 +136,7 @@
                 labels.splice(index, 1);
             }
             else { //Cell selected -> add to labels
-                labels[labels.length] = [cellAddr, asyncResult.getReturnValue()[0][0]];
+                labels[labels.length] = [cellAddr, "\"" + asyncResult.getReturnValue()[0][0] + "\""];
             }
             updateLabelColors();
             document.getElementById("results").innerHTML = getLabelsStr("<br>");
