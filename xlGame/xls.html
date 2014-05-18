@@ -33,7 +33,7 @@
         }
 
         function initCollectors() {
-            colorQuestionCell();
+            selectQuestionCell();
             labels = [];
             //de-color cells
             workbook.getRangeA1Async("hidden!A2", setHiddenValue, "");
@@ -83,7 +83,6 @@
                 uiOptions: {
                     showGridlines: true,
                     showRowColumnHeaders: true,
-                   // selectedCell: "'Sheet1'!C3", //TODO: select a random cell
                     showParametersTaskPane: true
                 },
                 interactivityOptions: {
@@ -110,16 +109,22 @@
             initCollectors();
         }
 
-        function colorQuestionCell() {
-            questionCell = workbook.getRange(workbook.getActiveSheet().getName(), 1, 1, 1, 1);
-            //set value to hidden!A1 to make confitional formatting color the questionCell
-            workbook.getRangeA1Async("hidden!A1", setHiddenValue, questionCell.getAddressA1() + ",");
-            //set header question
-            questionCell.getValuesAsync(1, setQuestionCellHeader, null);
+        function selectQuestionCell() {
+            var qCell = randomCell();
+            questionCell = workbook.getRange(workbook.getActiveSheet().getName(), qCell.row, qCell.column, 1, 1);
+            questionCell.getValuesAsync(1, checkNonEmpty, null);
         }
 
-        function setQuestionCellHeader(asyncResult) {
-            document.getElementById("questionCell").innerHTML = "What is " + asyncResult.getReturnValue()[0][0] + " in " + questionCell.getAddressA1() + "?";
+        function checkNonEmpty(asyncResult) {
+            var value = asyncResult.getReturnValue()[0][0];
+            if (value == "") {
+                //select another cell
+                selectQuestionCell();
+            } else {
+                //set value to hidden!A1 to make confitional formatting color the ewaCell
+                workbook.getRangeA1Async("hidden!A1", setHiddenValue, questionCell.getAddressA1() + ",");
+                document.getElementById("questionCell").innerHTML = "What is " + asyncResult.getReturnValue()[0][0] + " in " + questionCell.getAddressA1().split("!")[1] + "?";
+            }
         }
 
         // Handle the active cell changed event.
@@ -172,6 +177,17 @@
             };
             return labelsList;
         }
+
+        function randomCell(){
+            var r = Math.floor(Math.random() * 10); //TODO: set constant to max number of visible rows
+            var c = Math.floor(Math.random() * 10); //TODO: set constant to max number of visible columns
+            return {
+                row: r,
+                column: c
+            };
+        }
+
+
 
     </script>
 
