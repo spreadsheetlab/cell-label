@@ -7,11 +7,12 @@
 <body>
     <div id="questionCell" style="font-size:x-large">Loading...</div>
     <br />
+    <div id="results"></div>
+    <br />
     <div id="excelDivParent">
         <div id="excelDiv"></div>
     </div>
-    <button onclick="btnNextClick()">Next workbook>></button>
-    <button onclick="btnNextCellClick()">Next cell>></button>
+    <button onclick="btnNextClick()">Next>></button>
     <script type="text/javascript" src="http://r.office.microsoft.com/r/rlidExcelWLJS?v=1&kip=1"></script>
     <script type="text/javascript">
         /*
@@ -24,6 +25,7 @@
         var workbook = null //the active workbook
         var questionCell = null; //the cell to be labeled
         var labels = []; //list with the labels the user has clicked, each represented as a tuple eg "C3, value"
+        var remainingCells; //the number of cells to be labeled before changing workbook
         
         // run the Excel load handler on page load
         if (window.attachEvent) {
@@ -45,12 +47,15 @@
         }
 
         function btnNextClick() {
-            postData(true);
-        }
-
-        function btnNextCellClick() {
-            postData(false);
-            initCollectors();
+            remainingCells--;
+            if (remainingCells < 0) {
+                //Change worksheet
+                postData(true);
+            } else {
+                //Change question cell in the same worksheet
+                postData(false);
+                initCollectors();
+            }
         }
 
         function postData(changeXls) {
@@ -71,8 +76,7 @@
                 if (changeXls) {
                     xlsToken = resp.xls;
                     loadExcel(xlsToken);
-                } else {
-                    
+                    remainingCells = Math.floor(Math.random() * 3) + 2; //TODO: set number of tries before worksheet change, now 2 to 2+(3-1) = 4
                 }
             });
         }
@@ -129,7 +133,6 @@
 
         // Handle the active cell changed event.
         function onCellSelectionChange(rangeArgs) {
-            //TODO: support for multiple cell selection
             var cell = workbook.getActiveCell();
             cell.getValuesAsync(1, updateLabels, cell);
         }
@@ -144,8 +147,7 @@
                 labels[labels.length] = [cellAddr, "\"" + asyncResult.getReturnValue()[0][0] + "\""];
             }
             updateLabelColors();
-            document.getElementById("results").innerHTML = getLabelsStr("<br>");
-            //TODO! only if it is not because of sheet change
+            document.getElementById("results").innerHTML = "It is " + getLabelsStr(1, " ");
         }
 
         function indexOfLabel(cellAddr) {
@@ -160,7 +162,7 @@
         function updateLabelColors() {
             //Formatting changes are not supported by the api!
             //What we do instead is apply conditional formatting to cells, using formula =NOT(ISERROR(FIND(SUBSTITUTE(TEXT(ADDRESS(ROW(),COLUMN()), "")&",", "$",""),hidden!$A$2)))
-            workbook.getRangeA1Async("hidden!A2", setHiddenValue, getLabelsStr(","));
+            workbook.getRangeA1Async("hidden!A2", setHiddenValue, getLabelsStr(0, ","));
         }
 
         function setHiddenValue(asyncResult) {
@@ -170,10 +172,10 @@
         function setRangeValues(asyncResult) {
         }
 
-        function getLabelsStr(delimeter) {
+        function getLabelsStr(index, delimeter) {
             var labelsList = "";
             for (var i = 0; i < labels.length; i++) {
-                labelsList += labels[i][0] + delimeter;
+                labelsList += labels[i][index] + delimeter;
             };
             return labelsList;
         }
@@ -187,11 +189,7 @@
             };
         }
 
-
-
     </script>
-
-    <div id="results"></div>
     </body>
 </html>
 
