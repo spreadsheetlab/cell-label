@@ -25,13 +25,22 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "xlGame", "http://localhost:
 		DefaultWebSiteLanguage = "Visual C#"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xlPrep", "xlPrep\xlPrep.csproj", "{029BF1F3-992F-4644-8375-9E4990C00B40}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{61C8AC53-366A-40E6-985E-1F84F2E6C2B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{61C8AC53-366A-40E6-985E-1F84F2E6C2B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61C8AC53-366A-40E6-985E-1F84F2E6C2B5}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{61C8AC53-366A-40E6-985E-1F84F2E6C2B5}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{029BF1F3-992F-4644-8375-9E4990C00B40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{029BF1F3-992F-4644-8375-9E4990C00B40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{029BF1F3-992F-4644-8375-9E4990C00B40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{029BF1F3-992F-4644-8375-9E4990C00B40}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
