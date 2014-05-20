@@ -5,7 +5,7 @@
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 <body>
-    <div id="questionCell" style="font-size:x-large">Loading...</div>
+    <div id="questionDiv" style="font-size:x-large">Loading...</div>
     <br />
     <div id="results"></div>
     <br />
@@ -39,7 +39,7 @@
             labels = [];
             //de-color cells
             workbook.getRangeA1Async("hidden!A2", setHiddenValue, "");
-            document.getElementById("results").innerHTML = "";
+            $("#results").html("");
         }
 
         function loadEwaOnPageLoad() {
@@ -47,6 +47,7 @@
         }
 
         function btnNextClick() {
+            $("#questionDiv").html("What is...");
             remainingCells--;
             if (remainingCells < 0) {
                 //Change worksheet
@@ -127,7 +128,7 @@
             } else {
                 //set value to hidden!A1 to make confitional formatting color the ewaCell
                 workbook.getRangeA1Async("hidden!A1", setHiddenValue, questionCell.getAddressA1() + ",");
-                document.getElementById("questionCell").innerHTML = "What is " + asyncResult.getReturnValue()[0][0] + " in " + questionCell.getAddressA1().split("!")[1] + "?";
+                $("#questionDiv").html("What is " + asyncResult.getReturnValue()[0][0] + " in " + questionCell.getAddressA1().split("!")[1] + "?");
             }
         }
 
@@ -138,16 +139,21 @@
         }
 
         function updateLabels(asyncResult) {
+            var cellValue = asyncResult.getReturnValue()[0][0];
+            if (cellValue == "") {
+                return;
+            }
+
             var cellAddr = asyncResult.getUserContext().getAddressA1().split("!")[1];
             var index = indexOfLabel(cellAddr);
             if (index >= 0) { //Cell already in list, de-selected -> remove from labels
                 labels.splice(index, 1);
             }
             else { //Cell selected -> add to labels
-                labels[labels.length] = [cellAddr, "\"" + asyncResult.getReturnValue()[0][0] + "\""];
+                labels[labels.length] = [cellAddr, "\"" + cellValue + "\""];
             }
             updateLabelColors();
-            document.getElementById("results").innerHTML = "It is " + getLabelsStr(1, " ");
+            $("#results").html("It is " + getLabelsStr(1, " "));
         }
 
         function indexOfLabel(cellAddr) {
