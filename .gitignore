@@ -1,0 +1,11 @@
+Debug
+Release
+*/publish/**
+App_Data
+packages
+/results.txt
+[Oo]bj
+[Bb]in
+*.suo
+*.log 
+*~
