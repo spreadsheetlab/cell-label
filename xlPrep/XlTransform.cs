@@ -8,7 +8,6 @@ namespace xlPrep
     class XlTransform
     {
         //TODO on spredsheets: 
-        //- Add hidden worksheet named hidden
         //- Add the 2 conditional formating rules
 
         public void Transform(String inputPath, String outputPath)
@@ -28,6 +27,7 @@ namespace xlPrep
                         {
                             return;
                         }
+
                         excelReader.Read(file);
 
                         //Seperate worksheets in different files
@@ -52,7 +52,15 @@ namespace xlPrep
                                 }
                             }
 
-                        xls.Save(Path.Combine(outputPath, Path.GetFileNameWithoutExtension(file) + ".xlsx"), SaveOptions.XlsxDefault);
+                            if (cellCounter > 10) //TODO: set lower limit of cells number for the excels that will be used
+                            {
+                                //Add hidden worksheet
+                                singleXls.Worksheets.Add("hidden");
+                                singleXls.Worksheets[1].Visibility = SheetVisibility.Hidden;
+
+                                singleXls.Save(Path.Combine(outputPath, Path.GetFileNameWithoutExtension(file) + "_" + sheet.Name + ".xlsx"), SaveOptions.XlsxDefault);
+                            }
+                        }
                     }
                     catch (Exception e)
                     {   //continue to the next file
@@ -66,6 +74,6 @@ namespace xlPrep
             }
             System.Diagnostics.Debug.WriteLine("Analyzed " + i + " files.");
         }
-        
+
     }
 }
