@@ -8,9 +8,6 @@ namespace xlPrep
 {
     class XlTransform
     {
-        //TODO on spredsheets: 
-        //- Add the 2 conditional formating rules
-
         public void Transform(String inputPath, String outputPath)
         {
             var excelReader = new ExcelReader();
@@ -24,7 +21,7 @@ namespace xlPrep
                     {
                         System.Diagnostics.Debug.WriteLine("Processing " + file);
                         i++;
-                        if (i > 10) //TODO: remove, just for testing
+                        if (i > 50) //TODO: remove, just for testing
                         {
                             return;
                         }

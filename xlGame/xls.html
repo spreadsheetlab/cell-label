@@ -1,18 +1,18 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title></title>
+    <title>xlGame</title>
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <link rel="stylesheet" type="text/css" href="xlGame.css">
 </head>
 <body>
     <div id="questionDiv" style="font-size:x-large">Loading...</div>
     <br />
-    <div id="results"></div>
+    <div id="results"></div> <button onclick="btnNextClick()">Next>></button>
     <br />
     <div id="excelDivParent">
         <div id="excelDiv"></div>
     </div>
-    <button onclick="btnNextClick()">Next>></button>
     <script type="text/javascript" src="http://r.office.microsoft.com/r/rlidExcelWLJS?v=1&kip=1"></script>
     <script type="text/javascript">
         //TODO: what if a label cell is selected as a question cell?
@@ -23,7 +23,6 @@
         var labels = []; //list with the labels the user has clicked, each represented as a tuple eg "C3, value"
         var remainingCells; //the number of cells to be labeled before changing workbook
         
-        // run the Excel load handler on page load
         if (window.attachEvent) {
             window.attachEvent("onload", loadEwaOnPageLoad);
         } else {
@@ -96,7 +95,7 @@
             };
 
             $("#excelDiv").remove();
-            $("#excelDivParent").append("<div id=\"excelDiv\" style=\"width: 1000px; height: 300px\"></div>");
+            $("#excelDivParent").append("<div id=\"excelDiv\" style=\"width: 1000px; height: 600px\"></div>");
 
             Ewa.EwaControl.loadEwaAsync(token, "excelDiv", props, onExcelLoaded);
         }
@@ -104,9 +103,7 @@
         function onExcelLoaded(result) {
             ewa = Ewa.EwaControl.getInstances().getItem(Ewa.EwaControl.getInstances().getCount() - 1);
             workbook = ewa.getActiveWorkbook();
-            // Add  event handler for the cell change event
-            //ewa.add_activeCellChanged(onCellSelectionChange);
-            ewa.add_activeSelectionChanged(onCellSelectionChange);
+            ewa.add_activeCellChanged(onCellSelectionChange);
             initCollectors();
         }
 
@@ -124,7 +121,7 @@
             } else {
                 //set value to hidden!A1 to make confitional formatting color the ewaCell
                 workbook.getRangeA1Async("hidden!A1", setHiddenValue, questionCell.getAddressA1() + ",");
-                $("#questionDiv").html("What is " + asyncResult.getReturnValue()[0][0] + " in " + questionCell.getAddressA1().split("!")[1] + "?");
+                $("#questionDiv").html("What is <div class=\"questionCell\">" + asyncResult.getReturnValue()[0][0] + "</div> in " + questionCell.getAddressA1().split("!")[1] + "?");
             }
         }
 
@@ -149,7 +146,7 @@
                 labels[labels.length] = [cellAddr, "\"" + cellValue + "\""];
             }
             updateLabelColors();
-            $("#results").html("It is " + getLabelsStr(1, " "));
+            $("#results").html("It is <div class=\"labelCell\">" + getLabelsStr(1, "</div> <div class=\"labelCell\">") + "</div>");
         }
 
         function indexOfLabel(cellAddr) {
@@ -162,8 +159,6 @@
         }
 
         function updateLabelColors() {
-            //Formatting changes are not supported by the api!
-            //What we do instead is apply conditional formatting to cells, using formula =NOT(ISERROR(FIND(SUBSTITUTE(TEXT(ADDRESS(ROW(),COLUMN()), "")&",", "$",""),hidden!$A$2)))
             workbook.getRangeA1Async("hidden!A2", setHiddenValue, getLabelsStr(0, ","));
         }
 
@@ -184,7 +179,7 @@
 
         function randomCell(){
             var r = Math.floor(Math.random() * 10); //TODO: set constant to max number of visible rows
-            var c = Math.floor(Math.random() * 10); //TODO: set constant to max number of visible columns
+            var c = Math.floor(Math.random() * 15); //TODO: set constant to max number of visible columns
             return {
                 row: r,
                 column: c
