@@ -57,6 +57,7 @@ namespace xlPrep
                                 singleXls.Worksheets[1].Visibility = SheetVisibility.Hidden;
 
                                 var savePath = Path.Combine(outputPath, Path.GetFileNameWithoutExtension(file) + "_" + sheet.Name + ".xlsx");
+                                savePath = savePath.Replace("#","");
                                 singleXls.Save(savePath, SaveOptions.XlsxDefault);
                                 if (!addFormatRule(savePath))
                                 {
