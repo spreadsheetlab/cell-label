@@ -14,8 +14,14 @@
     color:orange;
     display:inline-block;
     border:1px solid orange;
+}
+
 .userDiv{
     float:right;
 }
 
+.userScore{
+    font-family: 'Courier New';
+    font-weight:800;
+    color:green;
 }

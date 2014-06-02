@@ -14,6 +14,8 @@
         <div id="excelDiv"></div>
     </div>
     <div id="userDiv" class="userDiv">
+        Your score: <div id="noOfLabels" class="userScore">0</div>
+        <br />
         Fill in your email
         <br />
         <input id="userEmail" type="text" />
@@ -27,6 +29,7 @@
         var questionCell = null; //the cell to be labeled
         var labels = []; //list with the labels the user has clicked, each represented as a tuple eg "C3, value"
         var remainingCells; //the number of cells to be labeled before changing workbook
+        var userScore = 0;
         
         if (window.attachEvent) {
             window.attachEvent("onload", loadEwaOnPageLoad);
@@ -147,12 +150,15 @@
             var index = indexOfLabel(cellAddr);
             if (index >= 0) { //Cell already in list, de-selected -> remove from labels
                 labels.splice(index, 1);
+                userScore--;
             }
             else { //Cell selected -> add to labels
                 labels[labels.length] = [cellAddr, "\"" + cellValue + "\""];
+                userScore++;
             }
             updateLabelColors();
             $("#results").html("It is <div class=\"labelCell\">" + getLabelsStr(1, "</div> <div class=\"labelCell\">") + "</div>");
+            $("#noOfLabels").html(userScore);
         }
 
         function indexOfLabel(cellAddr) {
