@@ -20,14 +20,20 @@ public partial class _Default : System.Web.UI.Page
         string spreadsheet = Request.Form[0];
         string xlsToken = Request.Form[1];
         string cell = Request.Form[2];
+        string userEmail = Request.Form[3];
         string clientIP = getClientIPAddress();
 
         StreamWriter sw = File.AppendText(Request.PhysicalApplicationPath + "results.txt");
 
-        for (int i = 3; i < Request.Form.Count; i++)
+        for (int i = 4; i < Request.Form.Count; i++)
         {
             var commaIndex = Request.Form[i].IndexOf(',');
-            sw.WriteLine(xlsToken + "\t" + spreadsheet + "\t" + cell + "\t" + Request.Form[i].Insert(commaIndex, "\t").Remove(commaIndex + 1, 1));
+            sw.WriteLine(xlsToken + "\t" 
+                + spreadsheet + "\t" 
+                + cell + "\t" 
+                + Request.Form[i].Insert(commaIndex, "\t").Remove(commaIndex + 1, 1) + "\t" 
+                + clientIP + "\t" 
+                + userEmail);
         }
         
         sw.Flush();
@@ -51,7 +57,7 @@ public partial class _Default : System.Web.UI.Page
         //return spToken = "SD72E74B1ABFC5464!197/517479313637659748/t=0&s=0";
         return oneDriveFileTokenPrefix + line.Split('#')[1].Split('.')[2] + oneDriveFileTokenSuffix;
     }
-}
+
     private string getClientIPAddress()
     {
         System.Web.HttpContext context = System.Web.HttpContext.Current;

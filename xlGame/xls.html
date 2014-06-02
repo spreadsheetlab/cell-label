@@ -13,6 +13,11 @@
     <div id="excelDivParent">
         <div id="excelDiv"></div>
     </div>
+    <div id="userDiv" class="userDiv">
+        Fill in your email
+        <br />
+        <input id="userEmail" type="text" />
+    </div>
     <script type="text/javascript" src="http://r.office.microsoft.com/r/rlidExcelWLJS?v=1&kip=1"></script>
     <script type="text/javascript">
         //TODO: what if a label cell is selected as a question cell?
@@ -62,6 +67,7 @@
                     spreadsheet: workbook.getWorkbookPath(),
                     xlsToken: xlsToken,
                     cell: questionCell.getAddressA1(),
+                    userEmail: $("#userEmail").val(),
                     labels: labels
                 };
             }
