@@ -87,6 +87,8 @@ namespace xlPrep
                 Application excel = new Application();
                 Workbook workbook = excel.Workbooks.Open(path);
 
+                workbook.Worksheets[1].UsedRange.Hyperlinks.Delete();
+
                 FormatConditions fcs = workbook.Worksheets[1].UsedRange.FormatConditions;
 
                 fcs.Delete();
