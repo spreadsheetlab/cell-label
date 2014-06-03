@@ -49,8 +49,8 @@ namespace xlPrep
                                     }
                                 }
                             }
-
-                            if (cellCounter > 10) //TODO: set lower limit of cells number for the excels that will be used
+                            
+                            if (!sheet.Protected && cellCounter > 10) //TODO: set lower limit of cells number for the excels that will be used
                             {
                                 //Add hidden worksheet
                                 singleXls.Worksheets.Add("hidden");
