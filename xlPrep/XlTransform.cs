@@ -13,6 +13,11 @@ namespace xlPrep
             var excelReader = new ExcelReader();
             int i = 0;
             int cellCounter;
+            
+            var visibleWidth = LengthUnitConverter.Convert(1000, LengthUnit.Pixel, LengthUnit.ZeroCharacterWidth256thPart);
+            var visibleHeight = LengthUnitConverter.Convert(600, LengthUnit.Pixel, LengthUnit.Twip);
+            int cwidth, rheight;
+
             try
             {
                 foreach (var file in Directory.EnumerateFiles(inputPath, "*.xls*", SearchOption.AllDirectories))
@@ -32,13 +37,46 @@ namespace xlPrep
                         foreach (var sheet in excelReader.GemboxExcel.Worksheets)
                         {
                             cellCounter = 0;
+
                             var singleXls = new ExcelFile();
                             singleXls.Worksheets.AddCopy(sheet.Name, sheet);
-                            //Make cells value-only, removing formulas (otherwise REF-errors occur when other sheets are referenced)
-                            foreach (var r in sheet.Rows)
+                            var copiedSheet = singleXls.Worksheets[0];
+
+                            //Remove rows and columns that are outside the visibleWidth and visibleHeight
+                            cwidth = 0;
+                            rheight = 0;
+                            foreach (var r in copiedSheet.Rows)
                             {
-                                cellCounter += r.AllocatedCells.Count;
-                                for (var c = 0; c < r.AllocatedCells.Count; c++)
+                                if (rheight < visibleHeight) {
+                                    rheight += r.Height;
+                                }
+                                else
+                                {
+                                    while (r.Index < copiedSheet.Rows.Count)
+                                    {
+                                        copiedSheet.Rows[r.Index].Delete();
+                                    }
+                                    break;
+                                }
+
+                            }
+                            for (int c = 0; c < copiedSheet.CalculateMaxUsedColumns(); c++)
+                            {
+                                if (cwidth < visibleWidth)
+                                {
+                                    cwidth += copiedSheet.Columns[c].Width;
+                                }
+                                else
+                                {
+                                    copiedSheet.Columns[c].Delete();
+                                    c--;
+                                }
+                            }
+                            
+                            //Make cells value-only, removing formulas (otherwise REF-errors occur when other sheets are referenced)
+                            foreach (var r in copiedSheet.Rows)
+                            {
+                                for (var c = 0; c < copiedSheet.CalculateMaxUsedColumns(); c++)
                                 {
                                     var cell = singleXls.Worksheets[0].Cells[r.Index, c];
                                     if (cell.Formula != null && cell.Formula != "")
@@ -46,6 +84,10 @@ namespace xlPrep
                                         var value = cell.Value;
                                         cell.Formula = null;
                                         cell.Value = value;
+                                    }
+                                    if (cell.Value != null)
+                                    {
+                                        cellCounter++;
                                     }
                                 }
                             }
