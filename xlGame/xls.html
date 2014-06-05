@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="xlGame.css">
 </head>
 <body>
+    <div id="notSelected">Not selected: </div>
     <div id="questionDiv" style="font-size:x-large">Loading...</div>
     <br />
     <div id="results"></div> <button onclick="btnNextClick()">Next>></button>
@@ -119,18 +120,20 @@
         function selectQuestionCell() {
             var qCell = randomCell();
             questionCell = workbook.getRange(workbook.getActiveSheet().getName(), qCell.row, qCell.column, 1, 1);
-            questionCell.getValuesAsync(1, checkNonEmpty, null);
+            questionRange = workbook.getRange(workbook.getActiveSheet().getName(), qCell.row - 1, qCell.column - 1, 3, 3);
+            questionRange.getValuesAsync(1, checkNonEmptyNonLabel, null);
         }
 
-        function checkNonEmpty(asyncResult) {
-            var value = asyncResult.getReturnValue()[0][0];
-            if (value == "") {
+        function checkNonEmptyNonLabel(asyncResult) {
+            var r = asyncResult.getReturnValue();
+            if (!r[0][0] || !r[0][1] || !r[0][2] || !r[1][0] || !r[1][1] || !r[1][2] || !r[2][0] || !r[2][1] || !r[2][2] || !$.isNumeric(r[1][1])) {
                 //select another cell
+                $("#notSelected").append(questionCell.getAddressA1().split("!")[1] + ", ");
                 selectQuestionCell();
             } else {
                 //set value to hidden!A1 to make confitional formatting color the ewaCell
                 workbook.getRangeA1Async("hidden!A1", setHiddenValue, questionCell.getAddressA1() + ",");
-                $("#questionDiv").html("What is <div class=\"questionCell\">" + asyncResult.getReturnValue()[0][0] + "</div> in " + questionCell.getAddressA1().split("!")[1] + "?");
+                $("#questionDiv").html("What is <div class=\"questionCell\">" + r[1][1] + "</div> in " + questionCell.getAddressA1().split("!")[1] + "?");
             }
         }
 
@@ -190,8 +193,8 @@
         }
 
         function randomCell(){
-            var r = Math.floor(Math.random() * 10); //TODO: set constant to max number of visible rows
-            var c = Math.floor(Math.random() * 15); //TODO: set constant to max number of visible columns
+            var r = Math.floor(Math.random() * 9) + 1; //TODO: set constant to max number of visible rows
+            var c = Math.floor(Math.random() * 14) + 1; //TODO: set constant to max number of visible columns
             return {
                 row: r,
                 column: c
