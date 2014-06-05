@@ -20,7 +20,7 @@ public partial class _Default : System.Web.UI.Page
         string spreadsheet = Request.Form[0];
         string xlsToken = Request.Form[1];
         string cell = Request.Form[2];
-        string userEmail = Request.Form[3];
+        string userEmail = removeBreakChars(Request.Form[3]);
         string clientIP = getClientIPAddress();
 
         StreamWriter sw = File.AppendText(Request.PhysicalApplicationPath + "results.txt");
@@ -30,14 +30,19 @@ public partial class _Default : System.Web.UI.Page
             var commaIndex = Request.Form[i].IndexOf(',');
             sw.WriteLine(xlsToken + "\t" 
                 + spreadsheet + "\t" 
-                + cell + "\t" 
-                + Request.Form[i].Insert(commaIndex, "\t").Remove(commaIndex + 1, 1) + "\t" 
+                + cell + "\t"
+                + removeBreakChars(Request.Form[i]).Insert(commaIndex, "\t").Remove(commaIndex + 1, 1) + "\t" 
                 + clientIP + "\t" 
                 + userEmail);
         }
         
         sw.Flush();
         sw.Close();
+    }
+
+    private string removeBreakChars(string s)
+    {
+        return s.Replace("\t", "").Replace("\n", "").Replace("\r", "").Replace("\r\n", "");
     }
 
     private void sendNextChallenge()
