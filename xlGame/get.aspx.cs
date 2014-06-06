@@ -28,14 +28,51 @@ public partial class _Default : System.Web.UI.Page
         for (int i = 4; i < Request.Form.Count; i++)
         {
             var commaIndex = Request.Form[i].IndexOf(',');
-            sw.WriteLine(xlsToken + "\t" 
+            sw.WriteLine(DateTime.Now
+                + xlsToken + "\t" 
                 + spreadsheet + "\t" 
                 + cell + "\t"
                 + removeBreakChars(Request.Form[i]).Insert(commaIndex, "\t").Remove(commaIndex + 1, 1) + "\t" 
                 + clientIP + "\t" 
                 + userEmail);
         }
+
+        saveStatistics(Request.Form.Count - 4);
         
+        sw.Flush();
+        sw.Close();
+    }
+
+    private void saveStatistics(int newLabels)
+    {
+        StreamReader sr = new StreamReader(Request.PhysicalApplicationPath + "stats.txt");
+
+        var firstLine = sr.ReadLine();
+        var newLine = "";
+        var now = DateTime.Now;
+
+        if (now.DayOfYear.ToString() == firstLine.Split('\t')[3])
+        {
+            var tmp = firstLine.Split('#');
+            firstLine = tmp[0] + "#" + (Convert.ToInt32(tmp[1]) + newLabels);
+        }
+        else
+        {
+            newLine = now.Year.ToString()
+                + "\t" + now.Month.ToString()
+                + "\t" + System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetWeekOfYear(now, System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Monday).ToString()
+                + "\t" + now.DayOfYear.ToString()
+                + "\t#" + newLabels.ToString()
+                + Environment.NewLine; 
+        }
+
+        String s = newLine + firstLine + Environment.NewLine + sr.ReadToEnd();
+
+        sr.Close();
+
+        StreamWriter sw = new StreamWriter(Request.PhysicalApplicationPath + "stats.txt");
+
+        sw.Write(s);
         sw.Flush();
         sw.Close();
     }
