@@ -9,11 +9,14 @@ public partial class _Default : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        Response.ContentType = "application/json";
+
         if (Request.ContentLength > 0)
         {
             saveData();
         }
         sendNextChallenge();
+        sendStatistics();
     }
 
     private void saveData(){
@@ -37,14 +40,19 @@ public partial class _Default : System.Web.UI.Page
                 + userEmail);
         }
 
-        saveStatistics(Request.Form.Count - 4);
+        updateStatistics(Request.Form.Count - 4);
         
         sw.Flush();
         sw.Close();
     }
 
-    private void saveStatistics(int newLabels)
+    private void updateStatistics(int newLabels)
     {
+        if (newLabels == 0)
+        {
+            return;
+        }
+
         StreamReader sr = new StreamReader(Request.PhysicalApplicationPath + "stats.txt");
 
         var firstLine = sr.ReadLine();
@@ -54,7 +62,7 @@ public partial class _Default : System.Web.UI.Page
         if (now.DayOfYear.ToString() == firstLine.Split('\t')[3])
         {
             var tmp = firstLine.Split('#');
-            firstLine = tmp[0] + "#" + (Convert.ToInt32(tmp[1]) + newLabels);
+            firstLine = tmp[0] + "#" + (newLabels + Convert.ToInt32(tmp[1]));
         }
         else
         {
@@ -67,14 +75,57 @@ public partial class _Default : System.Web.UI.Page
         }
 
         String s = newLine + firstLine + Environment.NewLine + sr.ReadToEnd();
-
         sr.Close();
 
         StreamWriter sw = new StreamWriter(Request.PhysicalApplicationPath + "stats.txt");
-
         sw.Write(s);
+
         sw.Flush();
         sw.Close();
+    }
+
+    private void sendStatistics()
+    {
+        var statsDay = 0;
+        var statsWeek = 0;
+        var statsMonth = 0;
+        var statsYear = 0;
+        var now = DateTime.Now;
+
+        string[] lineData;
+        var stat = 0;
+        StreamReader sr = new StreamReader(Request.PhysicalApplicationPath + "stats.txt");
+        while(!sr.EndOfStream){
+            lineData = sr.ReadLine().Split('\t');
+            stat = Convert.ToInt32(lineData[4].Remove(0, 1));
+            if (now.Year == Convert.ToInt32(lineData[0]))
+            {
+                statsYear += stat;
+                if (now.Month == Convert.ToInt32(lineData[1]))
+                {
+                    statsMonth += stat;
+                    if (System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetWeekOfYear(now, System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Monday) == Convert.ToInt32(lineData[2]))
+                    {
+                        statsWeek += stat;
+                        if (now.DayOfYear == Convert.ToInt32(lineData[3]))
+                        {
+                            statsDay += stat;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        sr.Close();
+
+        Response.Write(" \"statsDay\": \"" + statsDay + "\" ,");
+        Response.Write(" \"statsWeek\": \"" + statsWeek + "\" ,");
+        Response.Write(" \"statsMonth\": \"" + statsMonth + "\" ,");
+        Response.Write(" \"statsYear\": \"" + statsYear + "\" }");
     }
 
     private string removeBreakChars(string s)
@@ -85,8 +136,7 @@ public partial class _Default : System.Web.UI.Page
     private void sendNextChallenge()
     {
         var xls = getNextXlsToken();
-        Response.ContentType = "application/json";
-        Response.Write("{ \"xls\": \"" + xls + "\" }");
+        Response.Write("{ \"xls\": \"" + xls + "\" ,");
     }
 
     private String getNextXlsToken() 

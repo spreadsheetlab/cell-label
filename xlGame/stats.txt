@@ -1,1 +1,1 @@
-year	month	week	day	total
+1800	0	0	0	#0

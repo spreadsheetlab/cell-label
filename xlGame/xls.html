@@ -19,6 +19,10 @@
         Fill in your email
         <br />
         <input id="userEmail" type="text" />
+        <br />
+        Statistics (Day / Week / Month / Year):
+        <br />
+        <div id="stats"></div>
     </div>
     <script type="text/javascript" src="http://r.office.microsoft.com/r/rlidExcelWLJS?v=1&kip=1"></script>
     <script type="text/javascript">
@@ -83,6 +87,7 @@
                     loadExcel(xlsToken);
                     remainingCells = Math.floor(Math.random() * 3) + 2; //TODO: set number of tries before worksheet change, now 2 to 2+(3-1) = 4
                 }
+                $("#stats").html(resp.statsDay + " / " + resp.statsWeek + " / " + resp.statsMonth + " / " + resp.statsYear);
             });
         }
 
