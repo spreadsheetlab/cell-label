@@ -6,7 +6,7 @@ public partial class _Default : System.Web.UI.Page
 {
     private const String oneDriveFileTokenPrefix = "SD";
     private const String oneDriveFileTokenSuffix = "/517479313637659748/t=0&s=0";
-    private const int prefixFieldsNo = 4;
+    private const int prefixFieldsNo = 5;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -24,14 +24,16 @@ public partial class _Default : System.Web.UI.Page
         string spreadsheet = Request.Form[0];
         string xlsToken = Request.Form[1];
         string cell = Request.Form[2];
-        string userEmail = removeBreakChars(Request.Form[3]);
+        string skipExpl = "\"" + removeBreakChars(Request.Form[3]) + "\"";
+        string userEmail = removeBreakChars(Request.Form[4]);
         string clientIP = getClientIPAddress();
         string linePrefix = DateTime.Now + "\t"
                 + clientIP + "\t"
                 + "email:" + userEmail + "\t"
                 + xlsToken + "\t"
                 + spreadsheet + "\t"
-                + cell;
+                + cell + "\t"
+                + "skip:" + skipExpl;
 
         StreamWriter sw = File.AppendText(Request.PhysicalApplicationPath + "results.txt");
 

@@ -8,7 +8,9 @@
 <body>
     <div id="questionDiv" style="font-size:x-large">Loading...</div>
     <br />
-    <div id="results"></div> <button onclick="btnNextClick()">Next>></button>
+    <div id="results"></div>
+    <div id="lblSkip"></div> <input id="txtSkip" type="text" /> <button onclick="btnNextClick()">Next>></button>
+    <br />
     <br />
     <div id="excelDivParent">
         <div id="excelDiv"></div>
@@ -46,7 +48,7 @@
             labels = [];
             //de-color cells
             workbook.getRangeA1Async("hidden!A2", setHiddenValue, "");
-            $("#results").html("");
+            showSkipText();
         }
 
         function loadEwaOnPageLoad() {
@@ -58,6 +60,7 @@
                 spreadsheet: workbook.getWorkbookPath(),
                 xlsToken: xlsToken,
                 cell: questionCell.getAddressA1(),
+                skipExpl: $("#txtSkip").val(),
                 userEmail: $("#userEmail").val(),
                 labels: labels
             };
@@ -158,8 +161,22 @@
                 userScore++;
             }
             updateLabelColors();
-            $("#results").html("It is <div class=\"labelCell\">" + getLabelsStr(1, "</div> <div class=\"labelCell\">") + "</div>");
             $("#noOfLabels").html(userScore);
+
+            labels.length > 0 ? hideSkipText() : showSkipText();
+        }
+
+        function showSkipText() {
+            $("#results").html("");
+            $("#txtSkip").val("");
+            $("#txtSkip").show();
+            $("#lblSkip").html("Select cells that apply, or skip challenge because ");
+        }
+
+        function hideSkipText() {
+            $("#results").html("It is <div class=\"labelCell\">" + getLabelsStr(1, "</div> <div class=\"labelCell\">") + "</div>");
+            $("#txtSkip").hide();
+            $("#lblSkip").html("");
         }
 
         function indexOfLabel(cellAddr) {
