@@ -6,6 +6,7 @@ public partial class _Default : System.Web.UI.Page
 {
     private const String oneDriveFileTokenPrefix = "SD";
     private const String oneDriveFileTokenSuffix = "/517479313637659748/t=0&s=0";
+    private const int prefixFieldsNo = 4;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -25,22 +26,29 @@ public partial class _Default : System.Web.UI.Page
         string cell = Request.Form[2];
         string userEmail = removeBreakChars(Request.Form[3]);
         string clientIP = getClientIPAddress();
+        string linePrefix = DateTime.Now + "\t"
+                + clientIP + "\t"
+                + "email:" + userEmail + "\t"
+                + xlsToken + "\t"
+                + spreadsheet + "\t"
+                + cell;
 
         StreamWriter sw = File.AppendText(Request.PhysicalApplicationPath + "results.txt");
 
-        for (int i = 4; i < Request.Form.Count; i++)
+        if (Request.Form.Count == prefixFieldsNo)
         {
-            var commaIndex = Request.Form[i].IndexOf(',');
-            sw.WriteLine(DateTime.Now
-                + xlsToken + "\t" 
-                + spreadsheet + "\t" 
-                + cell + "\t"
-                + removeBreakChars(Request.Form[i]).Insert(commaIndex, "\t").Remove(commaIndex + 1, 1) + "\t" 
-                + clientIP + "\t" 
-                + userEmail);
+            sw.WriteLine(linePrefix);
         }
-
-        updateStatistics(Request.Form.Count - 4);
+        else
+        {
+            for (int i = prefixFieldsNo; i < Request.Form.Count; i++)
+            {
+                var commaIndex = Request.Form[i].IndexOf(',');
+                sw.WriteLine(linePrefix + "\t"
+                    + removeBreakChars(Request.Form[i]).Insert(commaIndex, "\t").Remove(commaIndex + 1, 1));
+            }
+            updateStatistics(Request.Form.Count - prefixFieldsNo);
+        }
         
         sw.Flush();
         sw.Close();

@@ -50,35 +50,31 @@
         }
 
         function loadEwaOnPageLoad() {
-            postData(true);
+            postData({}, true);
         }
 
         function btnNextClick() {
+            var data = {
+                spreadsheet: workbook.getWorkbookPath(),
+                xlsToken: xlsToken,
+                cell: questionCell.getAddressA1(),
+                userEmail: $("#userEmail").val(),
+                labels: labels
+            };
+            
             $("#questionDiv").html("What is...");
             remainingCells--;
             if (remainingCells < 0) {
                 //Change worksheet
-                postData(true);
+                postData(data, true);
             } else {
                 //Change question cell in the same worksheet
-                postData(false);
+                postData(data, false);
                 initCollectors();
             }
         }
 
-        function postData(changeXls) {
-            var data = {};
-
-            if (labels.length > 0) {
-                data = {
-                    spreadsheet: workbook.getWorkbookPath(),
-                    xlsToken: xlsToken,
-                    cell: questionCell.getAddressA1(),
-                    userEmail: $("#userEmail").val(),
-                    labels: labels
-                };
-            }
-
+        function postData(data, changeXls) {
             posting = $.post("get.aspx", data);
 
             posting.done(function (resp) {
