@@ -1,20 +1,5 @@
-﻿body {
+﻿
 
-}
-
-.questionCell{
-    background-color:greenyellow;
-    color:green;
-    display:inline-block;
-    border:1px solid green;
-}
-
-.labelCell{
-    background-color:yellow;
-    color:orange;
-    display:inline-block;
-    border:1px solid orange;
-}
 
 .userDiv{
     float:right;

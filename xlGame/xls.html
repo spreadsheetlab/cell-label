@@ -12,24 +12,31 @@
     <link rel="stylesheet" type="text/css" href="xlGame.css">
 </head>
 <body>
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Spreadsheet labelling project</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><p id="userNames" class="navbar-text"></p></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     <div class="row">
         <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <div id="questionDiv" style="font-size:x-large">Loading...</div>
+        <div class="col-md-8" style="width: 1100px">
+            <h1><span id="questionHeader">Loading...</span><span class="text-muted" id="questionExp" style="font-size:large" hidden>Click all cells that apply</span></h1>
             <br />
-
             <form class="form-inline" role="form">
                 <div class="form-group">
-                    <div id="results"></div>
-                </div>
-                <div class="form-group">
-                    <label id="lblSkip" class="control-label" for="txtSkip"></label>
+                    <label id="results" class="text-success" style="font-size:larger"></label>
+                    <label id="lblSkip" class="text-muted" for="txtSkip"></label>
                     <input id="txtSkip" class="form-control" type="text" placeholder="Enter reason" />
                 </div>
                 <button type="button" class="btn btn-default" onclick="btnNextClick()">Next>></button>
             </form>
-
-            <br />
             <br />
             <div id="excelDivParent">
                 <div id="excelDiv"></div>
@@ -38,16 +45,34 @@
             <script type="text/javascript" src="xlGame.js"></script>
         </div>
         <div class="col-md-2">
-            <div id="userDiv" class="userDiv">
-                Your score: <div id="noOfLabels" class="userScore">0</div>
-                <br />
-                Fill in your email
-                <br />
-                <input id="userEmail" type="text" />
-                <br />
-                Statistics (Day / Week / Month / Year):
-                <br />
-                <div id="stats"></div>
+            <div class="row">
+                smiley
+            </div>
+            <div class="row" style="height:40%">
+                <div id="userDiv" class="userDiv">
+                    Your score: <div id="noOfLabels" class="userScore">0</div>
+                    <br />
+                    Fill in your email
+                    <br />
+                    <input id="userEmail" type="text" />
+                    <br />
+                    Statistics (Day / Week / Month / Year):
+                    <br />
+                    <div id="stats"></div>
+                </div>
+            </div>
+            <div class="row" style="text-align:center">
+                <a href="http://spreadsheetlab.org/" target="_blank">TU Delft Spreadsheet Lab</a>
+            </div>
+            <div class="row" style="text-align:center">
+                <a href="http://swerl.tudelft.nl/bin/view/Main/WebHome" target="_blank">
+                    <img src="images/serg-logo-color.png" style="margin:10px" />
+                </a>
+            </div>
+            <div class="row" style="text-align:center">
+                <a href="http://www.tudelft.nl/" target="_blank">
+                    <img src="images/TU-Delft_logo.gif" style="margin:10px" />
+                </a>
             </div>
         </div>
     </div>

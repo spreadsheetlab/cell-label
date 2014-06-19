@@ -18,6 +18,7 @@ function initCollectors() {
     //de-color cells
     workbook.getRangeA1Async("hidden!A2", setHiddenValue, "");
     showSkipText();
+    $("#userNames").html($("#userEmail").val());
 }
 
 function loadEwaOnPageLoad() {
@@ -34,7 +35,8 @@ function btnNextClick() {
         labels: labels
     };
 
-    $("#questionDiv").html("What is...");
+    $("#questionHeader").html("What describes...");
+    $("#questionExp").hide();
     remainingCells--;
     if (remainingCells < 0) {
         //Change worksheet
@@ -102,8 +104,13 @@ function checkNonEmpty(asyncResult) {
         selectQuestionCell();
     } else {
         //set value to hidden!A1 to make confitional formatting color the ewaCell
+        var qCellContent = asyncResult.getReturnValue()[0][0];
+        if (qCellContent.length > 35) {
+            qCellContent = qCellContent.substring(0, 30) + "...";
+        }
         workbook.getRangeA1Async("hidden!A1", setHiddenValue, questionCell.getAddressA1() + ",");
-        $("#questionDiv").html("What is <div class=\"questionCell\">" + asyncResult.getReturnValue()[0][0] + "</div> in " + questionCell.getAddressA1().split("!")[1] + "?");
+        $("#questionHeader").html("What describes <span class=\"label label-warning\">" + qCellContent + "</span> in " + questionCell.getAddressA1().split("!")[1] + "?");
+        $("#questionExp").show();
     }
 }
 
@@ -139,11 +146,11 @@ function showSkipText() {
     $("#results").html("");
     $("#txtSkip").val("");
     $("#txtSkip").show();
-    $("#lblSkip").text("Select cells that apply, or skip challenge because ");
+    $("#lblSkip").text("Skip challenge because ");
 }
 
 function hideSkipText() {
-    $("#results").html("It is <div class=\"labelCell\">" + getLabelsStr(1, "</div> <div class=\"labelCell\">") + "</div>");
+    $("#results").html("It is <span class=\"label label-success\">" + getLabelsStr(1, "</span> <span class=\"label label-success\">") + "</span>");
     $("#txtSkip").hide();
     $("#lblSkip").text("");
 }
