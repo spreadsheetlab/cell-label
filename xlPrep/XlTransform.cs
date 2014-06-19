@@ -14,8 +14,8 @@ namespace xlPrep
             int i = 0;
             int cellCounter;
             
-            var visibleWidth = LengthUnitConverter.Convert(1000, LengthUnit.Pixel, LengthUnit.ZeroCharacterWidth256thPart);
-            var visibleHeight = LengthUnitConverter.Convert(600, LengthUnit.Pixel, LengthUnit.Twip);
+            var visibleWidth = LengthUnitConverter.Convert(950, LengthUnit.Pixel, LengthUnit.ZeroCharacterWidth256thPart);
+            var visibleHeight = LengthUnitConverter.Convert(520, LengthUnit.Pixel, LengthUnit.Twip);
             int cwidth, rheight;
 
             try
@@ -137,12 +137,12 @@ namespace xlPrep
 
                 object formula1 = "=NOT(ISERROR(FIND(SUBSTITUTE(TEXT(ADDRESS(ROW(),COLUMN()), \"\")&\",\", \"$\",\"\"),hidden!$A$1)))";
                 var fc1 = (FormatCondition)fcs.Add(XlFormatConditionType.xlExpression, Type.Missing, formula1);
-                setFormatting(fc1, System.Drawing.Color.Green, System.Drawing.Color.GreenYellow);
+                setFormatting(fc1, System.Drawing.Color.White, System.Drawing.ColorTranslator.FromHtml("#f0ad4e"), System.Drawing.ColorTranslator.FromHtml("#b97310"));
 
 
                 object formula2 = "=NOT(ISERROR(FIND(SUBSTITUTE(TEXT(ADDRESS(ROW(),COLUMN()), \"\")&\",\", \"$\",\"\"),hidden!$A$2)))";
                 var fc2 = (FormatCondition)fcs.Add(XlFormatConditionType.xlExpression, Type.Missing, formula2);
-                setFormatting(fc2, System.Drawing.Color.Orange, System.Drawing.Color.Yellow);
+                setFormatting(fc2, System.Drawing.Color.White, System.Drawing.ColorTranslator.FromHtml("#5cb85c"), System.Drawing.ColorTranslator.FromHtml("#367c36"));
 
                 fc1 = null;
                 fc2 = null;
@@ -164,14 +164,15 @@ namespace xlPrep
 
         }
 
-        private void setFormatting(FormatCondition fc, System.Drawing.Color fontColor, System.Drawing.Color backgroundColor)
+        private void setFormatting(FormatCondition fc, System.Drawing.Color fontColor, System.Drawing.Color backgroundColor, System.Drawing.Color borderColor)
         {
             fc.Interior.Color = System.Drawing.ColorTranslator.ToOle(backgroundColor);
             fc.Font.Color = System.Drawing.ColorTranslator.ToOle(fontColor);
-            fc.Borders[XlBordersIndex.xlEdgeBottom].Color = fontColor;
-            fc.Borders[XlBordersIndex.xlEdgeLeft].Color = fontColor;
-            fc.Borders[XlBordersIndex.xlEdgeRight].Color = fontColor;
-            fc.Borders[XlBordersIndex.xlEdgeTop].Color = fontColor;
+            fc.Font.Bold = (int)Microsoft.Office.Core.MsoTriState.msoTrue;
+            fc.Borders[XlBordersIndex.xlEdgeBottom].Color = borderColor;
+            fc.Borders[XlBordersIndex.xlEdgeLeft].Color = borderColor;
+            fc.Borders[XlBordersIndex.xlEdgeRight].Color = borderColor;
+            fc.Borders[XlBordersIndex.xlEdgeTop].Color = borderColor;
         }
 
     }
