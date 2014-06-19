@@ -5,6 +5,7 @@ var questionCell = null; //the cell to be labeled
 var labels = []; //list with the labels the user has clicked, each represented as a tuple eg "C3, value"
 var remainingCells; //the number of cells to be labeled before changing workbook
 var userScore = 0;
+var smileyScore = 0;
 
 if (window.attachEvent) {
     window.attachEvent("onload", loadEwaOnPageLoad);
@@ -26,6 +27,8 @@ function loadEwaOnPageLoad() {
 }
 
 function btnNextClick() {
+    updateSmiley();
+
     var data = {
         spreadsheet: workbook.getWorkbookPath(),
         xlsToken: xlsToken,
@@ -45,6 +48,15 @@ function btnNextClick() {
         //Change question cell in the same worksheet
         postData(data, false);
         initCollectors();
+    }
+}
+
+function updateSmiley() { //TODO: add more smiley images
+    (labels.length > 0 || $("#txtSkip").val().length > 0) ? smileyScore++ : smileyScore--;
+
+    var evenScore = Math.ceil(smileyScore / 2.0) * 2;
+    if (evenScore >= -2 && evenScore <= 4) {
+        $("#smiley").attr("src", "images/smiley_" + evenScore + ".jpg");
     }
 }
 
