@@ -1,6 +1,6 @@
 ﻿using System;
 using GemBox.Spreadsheet;
-using Infotron.PerfectXL;
+using Infotron.PerfectXL.SmellAnalyzer;
 using System.IO;
 using Microsoft.Office.Interop.Excel;
 
@@ -26,10 +26,10 @@ namespace xlPrep
                     {
                         System.Diagnostics.Debug.WriteLine("Processing " + file);
                         i++;
-                        if (i > 50) //TODO: remove, just for testing
-                        {
-                            return;
-                        }
+                        //if (i > 50) //TODO: remove, just for testing
+                        //{
+                        //    return;
+                        //}
 
                         excelReader.Read(file);
 
@@ -92,7 +92,7 @@ namespace xlPrep
                                 }
                             }
                             
-                            if (!sheet.Protected && cellCounter > 10) //TODO: set lower limit of cells number for the excels that will be used
+                            if (!sheet.Protected && cellCounter > 15) //TODO: set lower limit of cells number for the excels that will be used
                             {
                                 //Add hidden worksheet
                                 singleXls.Worksheets.Add("hidden");
