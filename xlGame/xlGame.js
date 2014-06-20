@@ -12,6 +12,19 @@ if (window.attachEvent) {
 } else {
     window.addEventListener("DOMContentLoaded", loadEwaOnPageLoad, false);
 }
+//TODO: hide content when loading excel or question
+$('#welcomeModal').on('hidden.bs.modal', function (e) {
+    //TODO: Update username/email label
+})
+
+$('.carousel').carousel({
+    interval: 20000
+})
+
+$('#welcomeModal').modal({
+    keyboard: false,
+    backdrop: 'static'
+})
 
 function initCollectors() {
     selectQuestionCell();
@@ -38,7 +51,7 @@ function btnNextClick() {
         labels: labels
     };
 
-    $("#questionHeader").html("What describes...");
+    $("#questionHeader").html("What describes&hellip;");
     $("#questionExp").hide();
     remainingCells--;
     if (remainingCells < 0) {
@@ -118,7 +131,7 @@ function checkNonEmpty(asyncResult) {
         //set value to hidden!A1 to make confitional formatting color the ewaCell
         var qCellContent = asyncResult.getReturnValue()[0][0];
         if (qCellContent.length > 35) {
-            qCellContent = qCellContent.substring(0, 30) + "...";
+            qCellContent = qCellContent.substring(0, 30) + "&hellip;";
         }
         workbook.getRangeA1Async("hidden!A1", setHiddenValue, questionCell.getAddressA1() + ",");
         $("#questionHeader").html("What describes <span class=\"label label-warning\">" + qCellContent + "</span> in " + questionCell.getAddressA1().split("!")[1] + "?");
@@ -196,8 +209,8 @@ function getLabelsStr(index, delimeter) {
 }
 
 function randomCell() {
-    var r = Math.floor(Math.random() * 10); //TODO: set constant to max number of visible rows
-    var c = Math.floor(Math.random() * 15); //TODO: set constant to max number of visible columns
+    var r = Math.floor(Math.random() * 10); //TODO: set constant to max number of visible rows. Start from the second?
+    var c = Math.floor(Math.random() * 15); //TODO: set constant to max number of visible columns. Start from the second?
     return {
         row: r,
         column: c

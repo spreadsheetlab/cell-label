@@ -12,6 +12,62 @@
     <link rel="stylesheet" type="text/css" href="xlGame.css">
 </head>
 <body>
+    <div class="modal fade" id="welcomeModal" tabindex="-1" role="dialog" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="welcomeModalLabel">Welcome to the spreadsheet labelling game!</h4>
+                </div>
+                <div class="modal-body">
+                    <p>This is how you play: Each challenge involves a random worksheet and a cell, marked in <span class="label label-warning">orange</span>.</p>
+                    <p>Your task is to click on the cells that describe or label it. Here are some examples:</p>
+                    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                        </ol>
+                        <div class="carousel-inner">
+                            <div class="item active">
+                                <div class="row" style="text-align:center">
+                                    <img src="images/examples/ex1_q.png" style="width:47%; padding:20px" />
+                                    <span class="glyphicon glyphicon-arrow-right"></span>
+                                    <img src="images/examples/ex1_a.png" style="width:47%; padding:20px" />
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="row" style="text-align:center">
+                                    <img src="images/examples/ex2_q.png" style="width:47%; padding:20px" />
+                                    <span class="glyphicon glyphicon-arrow-right"></span>
+                                    <img src="images/examples/ex2_a.png" style="width:47%; padding:20px" />
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="row" style="text-align:center">
+                                    <img src="images/examples/ex_lbl.png" style="width:47%; padding:20px" />
+                                    <span class="glyphicon glyphicon-arrow-right"></span>
+                                    The cell cannot labelled. Fill in something like:
+                                    <img src="images/examples/ex_lbl_resp.png" style="width:20%; padding:20px" />
+                                </div>
+                             </div>
+                        </div>
+                        <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                        </a>
+                        <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                        </a>
+                    </div>
+                    <p>Your score is calculated based on the number of labels that you identify.</p>
+                    <p>username, email, check: keep my score, check: keep me updated</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success btn-lg" data-dismiss="modal">Got it! Let's start <span class="glyphicon glyphicon-forward"></span></button>
+                </div>
+            </div>
+        </div>
+    </div>
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -20,14 +76,15 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li><p id="userNames" class="navbar-text"></p></li>
+                    <li><a href="#" data-toggle="modal" data-target="#welcomeModal">Welcome me again</a></li>
                 </ul>
             </div>
         </div>
     </nav>
     <div class="row">
         <div class="col-md-2"></div>
-        <div class="col-md-8" style="min-width: 1000px">
-            <h1><span id="questionHeader">Loading...</span><span class="text-muted" id="questionExp" style="font-size:large" hidden>Click all cells that apply</span></h1>
+        <div class="col-md-8" style="width: 1020px">
+            <h1><span id="questionHeader">Loading&hellip;</span><span class="text-muted" id="questionExp" style="font-size:large" hidden>Click all cells that apply</span></h1>
             <br />
             <form class="form-inline" role="form">
                 <div class="form-group">
@@ -35,7 +92,7 @@
                     <label id="lblSkip" class="text-muted" for="txtSkip"></label>
                     <input id="txtSkip" class="form-control" type="text" placeholder="Enter reason" />
                 </div>
-                <button type="button" class="btn btn-default" onclick="btnNextClick()">Next>></button>
+                <button type="button" class="btn btn-default" onclick="btnNextClick()">Next <span class="glyphicon glyphicon-forward"></span></button>
             </form>
             <br />
             <div id="excelDivParent">
@@ -59,6 +116,7 @@
                     Statistics (Day / Week / Month / Year):
                     <br />
                     <div id="stats"></div>
+                    Top 5 scorers for week/month/year?
                 </div>
             </div>
             <div class="row" style="text-align:center">
