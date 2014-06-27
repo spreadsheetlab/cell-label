@@ -20,7 +20,7 @@
                     <h4 class="modal-title" id="welcomeModalLabel">Welcome to the spreadsheet labelling game!</h4>
                 </div>
                 <div class="modal-body">
-                    <p>This is how you play: Each challenge involves a random worksheet and a cell, marked in <span class="label label-warning">orange</span>.</p>
+                    <p>This is how you play: Each challenge involves a random worksheet and a cell, marked in <span class="label label-warning">orange</span></p>
                     <p>Your task is to click on the cells that describe or label it. Here are some examples:</p>
                     <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
                         <ol class="carousel-indicators">
@@ -31,24 +31,34 @@
                         <div class="carousel-inner">
                             <div class="item active">
                                 <div class="row" style="text-align:center">
-                                    <img src="images/examples/ex1_q.png" style="width:47%; padding:20px" />
-                                    <span class="glyphicon glyphicon-arrow-right"></span>
-                                    <img src="images/examples/ex1_a.png" style="width:47%; padding:20px" />
-                                </div>
+                                    <div class="col-md-5 vcenter">
+                                        <img src="images/examples/ex1_q.png" style="width:100%" />
+                                        </div>
+                                    <div class="col-md-1 vcenter">
+                                        <span class="glyphicon glyphicon-arrow-right"></span>
+                                        </div>
+                                    <div class="col-md-5 vcenter">
+                                        <img src="images/examples/ex1_a.png" style="width:100%" />
+                                        </div>
+                                    </div>
                             </div>
                             <div class="item">
                                 <div class="row" style="text-align:center">
-                                    <img src="images/examples/ex2_q.png" style="width:47%; padding:20px" />
-                                    <span class="glyphicon glyphicon-arrow-right"></span>
-                                    <img src="images/examples/ex2_a.png" style="width:47%; padding:20px" />
+                                    <div class="col-md-5 vcenter">
+                                        <img src="images/examples/ex2_q.png" style="width:100%" />
+                                    </div>
+                                    <div class="col-md-1 vcenter">
+                                        <span class="glyphicon glyphicon-arrow-right"></span>
+                                    </div>
+                                    <div class="col-md-5 vcenter">
+                                        <img src="images/examples/ex2_a.png" style="width:100%" />
+                                    </div>
                                 </div>
-                            </div>
+                                </div>
                             <div class="item">
-                                <div class="row" style="text-align:center">
-                                    <img src="images/examples/ex_lbl.png" style="width:47%; padding:20px" />
-                                    <span class="glyphicon glyphicon-arrow-right"></span>
-                                    The cell cannot labelled. Fill in something like:
-                                    <img src="images/examples/ex_lbl_resp.png" style="width:20%; padding:20px" />
+                                <div class="row">
+                                    <div class="col-md-7 vcenter"><img src="images/examples/ex_lbl.png" style="width: 100%" /></div>
+                                    <div class="col-md-4 vcenter"><div class="alert alert-warning">The cell cannot labelled. Fill in something like: <img src="images/examples/ex_lbl_resp.png" style="width: 100%; padding: 5px" /></div> </div>
                                 </div>
                              </div>
                         </div>
