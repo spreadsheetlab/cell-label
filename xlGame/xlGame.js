@@ -68,8 +68,8 @@ function updateSmiley() { //TODO: add more smiley images
     (labels.length > 0 || $("#txtSkip").val().length > 0) ? smileyScore++ : smileyScore--;
 
     var evenScore = Math.ceil(smileyScore / 2.0) * 2;
-    if (evenScore >= -2 && evenScore <= 4) {
-        $("#smiley").attr("src", "images/smiley_" + evenScore + ".jpg");
+    if (evenScore >= -6 && evenScore <= 12) {
+        $("#smiley").attr("src", "images/smileys/smiley_" + evenScore + ".jpg");
     }
 }
 
