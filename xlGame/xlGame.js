@@ -214,8 +214,8 @@ function getLabelsStr(index, delimeter) {
 }
 
 function randomCell() {
-    var r = Math.floor(Math.random() * 10); //TODO: set constant to max number of visible rows. Start from the second?
-    var c = Math.floor(Math.random() * 15); //TODO: set constant to max number of visible columns. Start from the second?
+    var r = Math.floor(Math.random() * 30);
+    var c = Math.floor(Math.random() * 15);
     return {
         row: r,
         column: c
