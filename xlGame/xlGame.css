@@ -5,12 +5,8 @@
     float: none !important;
 }
 
-.userDiv{
-    float:right;
-}
-
-.userScore{
-    font-family: 'Courier New';
-    font-weight:800;
-    color:green;
+.vcenter2 {
+    vertical-align: middle !important;
+    float: none !important;
+    text-align:center;
 }

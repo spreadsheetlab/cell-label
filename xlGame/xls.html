@@ -115,7 +115,6 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><p id="userNames" class="navbar-text"></p></li>
                     <li><a href="#" data-toggle="modal" data-target="#welcomeModal">Welcome me again</a></li>
                 </ul>
             </div>
@@ -145,30 +144,39 @@
             <div class="row">
                 <img id="smiley" src="images/smileys/smiley_0.jpg" width="200px" style="border:none" />
             </div>
-            <div class="row" style="height:40%">
-                <div id="userDiv" class="userDiv">
-                    Your score: <div id="noOfLabels" class="userScore">0</div>
-                    <br />
-                    Statistics (Day / Week / Month / Year):
-                    <br />
-                    <div id="stats"></div>
-                    Top 5 scorers for week/month/year?
+            <div class="row">
+                </div>
+                <div class="row" style="padding:10px">
+                    <table class="table table-condensed table-bordered table-striped">
+                        <tr class="info">
+                            <th><div id="scoreLabel">your score</div></th>
+                            <th>totals</th>
+                        </tr>
+                        <tr>
+                            <td rowspan="4" class="vcenter2"><span class="label label-primary" id="noOfLabels" style="font-size:xx-large">0</span></td>
+                            <td><span class="badge" id="statsDay"></span> today</td>
+                        </tr>
+                        <tr><td><span class="badge" id="statsWeek"></span> this week</td></tr>
+                        <tr><td><span class="badge" id="statsMonth"></span> this month</td></tr>
+                        <tr><td><span class="badge" id="statsYear"></span> this year</td></tr>
+                    </table>
+                </div>
+                <div class="row" style="text-align:center">
+                    <a href="http://spreadsheetlab.org/" target="_blank">
+                        <img src="images/spLab.png" style="margin:15px" />
+                    </a>
+                </div>
+                <div class="row" style="text-align:center">
+                    <a href="http://swerl.tudelft.nl/bin/view/Main/WebHome" target="_blank">
+                        <img src="images/serg-logo-color.png" style="margin:15px" />
+                    </a>
+                </div>
+                <div class="row" style="text-align:center">
+                    <a href="http://www.tudelft.nl/" target="_blank">
+                        <img src="images/TU-Delft_logo.gif" style="margin:15px" />
+                    </a>
                 </div>
             </div>
-            <div class="row" style="text-align:center">
-                <a href="http://spreadsheetlab.org/" target="_blank">TU Delft Spreadsheet Lab</a>
-            </div>
-            <div class="row" style="text-align:center">
-                <a href="http://swerl.tudelft.nl/bin/view/Main/WebHome" target="_blank">
-                    <img src="images/serg-logo-color.png" style="margin:10px" />
-                </a>
-            </div>
-            <div class="row" style="text-align:center">
-                <a href="http://www.tudelft.nl/" target="_blank">
-                    <img src="images/TU-Delft_logo.gif" style="margin:10px" />
-                </a>
-            </div>
-        </div>
     </div>
 </body>
 </html>

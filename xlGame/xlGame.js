@@ -19,7 +19,7 @@ $('#welcomeModal').on('hidden.bs.modal', function (e) {
     if ($("#CheckKeep").is(':checked')) {
         useremail = $("#InputEmail").val();
         keepUpdated = $("#CheckUpdated").is(':checked');
-        $("#userNames").html(useremail);
+        $("#scoreLabel").html((useremail.length > 0) ? useremail.split('@')[0] + "'s score" : "your score");
     }
 })
 
@@ -87,7 +87,10 @@ function postData(data, changeXls) {
             loadExcel(xlsToken);
             remainingCells = Math.floor(Math.random() * 3) + 2; //number of tries before worksheet change, 2 to 2+(3-1) = 4
         }
-        $("#stats").html(resp.statsDay + " / " + resp.statsWeek + " / " + resp.statsMonth + " / " + resp.statsYear);
+        $("#statsDay").html(resp.statsDay);
+        $("#statsWeek").html(resp.statsWeek);
+        $("#statsMonth").html(resp.statsMonth);
+        $("#statsYear").html(resp.statsYear);
     });
 }
 
