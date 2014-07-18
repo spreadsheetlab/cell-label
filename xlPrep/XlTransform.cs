@@ -10,6 +10,7 @@ namespace xlPrep
     {
         public void Transform(String inputPath, String outputPath)
         {
+            SpreadsheetInfo.SetLicense("E7OS-D3IG-PM8L-A03O");
             var excelReader = new ExcelReader();
             int i = 0;
             int cellCounter;
