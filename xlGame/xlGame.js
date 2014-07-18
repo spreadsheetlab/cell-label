@@ -4,6 +4,8 @@ var workbook = null //the active workbook
 var questionCell = null; //the cell to be labeled
 var labels = []; //list with the labels the user has clicked, each represented as a tuple eg "C3, value"
 var remainingCells; //the number of cells to be labeled before changing workbook
+var useremail = "";
+var keepUpdated = false;
 var userScore = 0;
 var smileyScore = 0;
 
@@ -12,9 +14,13 @@ if (window.attachEvent) {
 } else {
     window.addEventListener("DOMContentLoaded", loadEwaOnPageLoad, false);
 }
-//TODO: hide content when loading excel or question
+
 $('#welcomeModal').on('hidden.bs.modal', function (e) {
-    //TODO: Update username/email label
+    if ($("#CheckKeep").is(':checked')) {
+        useremail = $("#InputEmail").val();
+        keepUpdated = $("#CheckUpdated").is(':checked');
+        $("#userNames").html(useremail);
+    }
 })
 
 $('.carousel').carousel({
@@ -32,7 +38,6 @@ function initCollectors() {
     //de-color cells
     workbook.getRangeA1Async("hidden!A2", setHiddenValue, "");
     showSkipText();
-    $("#userNames").html($("#userEmail").val());
 }
 
 function loadEwaOnPageLoad() {
@@ -47,7 +52,7 @@ function btnNextClick() {
         xlsToken: xlsToken,
         cell: questionCell.getAddressA1(),
         skipExpl: $("#txtSkip").val(),
-        userEmail: $("#userEmail").val(),
+        userEmail: useremail + "#" + keepUpdated,
         labels: labels
     };
 
@@ -64,7 +69,7 @@ function btnNextClick() {
     }
 }
 
-function updateSmiley() { //TODO: add more smiley images
+function updateSmiley() {
     (labels.length > 0 || $("#txtSkip").val().length > 0) ? smileyScore++ : smileyScore--;
 
     var evenScore = Math.ceil(smileyScore / 2.0) * 2;
@@ -80,7 +85,7 @@ function postData(data, changeXls) {
         if (changeXls) {
             xlsToken = resp.xls;
             loadExcel(xlsToken);
-            remainingCells = Math.floor(Math.random() * 3) + 2; //TODO: set number of tries before worksheet change, now 2 to 2+(3-1) = 4
+            remainingCells = Math.floor(Math.random() * 3) + 2; //number of tries before worksheet change, 2 to 2+(3-1) = 4
         }
         $("#stats").html(resp.statsDay + " / " + resp.statsWeek + " / " + resp.statsMonth + " / " + resp.statsYear);
     });

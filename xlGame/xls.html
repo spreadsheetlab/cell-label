@@ -84,12 +84,8 @@
                             <form class="form-inline" role="form">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" onclick="$('#DivUsername').toggle(); $('#DivEmail').toggle(); $('#DivUpdated').toggle();" checked> Keep my score
+                                        <input type="checkbox" id="CheckKeep" onclick="$('#DivEmail').toggle(); $('#DivUpdated').toggle();" checked> Keep my score
                                     </label>
-                                </div>
-                                <div class="form-group" id="DivUsername">
-                                    <label class="sr-only" for="InputUserName">Username</label>
-                                    <input type="text" class="form-control" id="InputUserName" placeholder="Username">
                                 </div>
                                 <div class="form-group" id="DivEmail">
                                     <label class="sr-only" for="exampleInputEmail2">Email</label>
@@ -99,7 +95,7 @@
                             <form class="form-inline" role="form" id="DivUpdated">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" checked> Keep me updated
+                                        <input type="checkbox" id ="CheckUpdated" checked> Keep me updated
                                     </label>
                                 </div>
                             </form>
@@ -152,10 +148,6 @@
             <div class="row" style="height:40%">
                 <div id="userDiv" class="userDiv">
                     Your score: <div id="noOfLabels" class="userScore">0</div>
-                    <br />
-                    Fill in your email
-                    <br />
-                    <input id="userEmail" type="text" />
                     <br />
                     Statistics (Day / Week / Month / Year):
                     <br />
