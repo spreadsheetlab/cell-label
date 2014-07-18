@@ -35,7 +35,7 @@ public partial class _Default : System.Web.UI.Page
                 + cell + "\t"
                 + "skip:" + skipExpl;
 
-        StreamWriter sw = File.AppendText(Request.PhysicalApplicationPath + "results.txt");
+        StreamWriter sw = File.AppendText(Request.PhysicalApplicationPath + @"\data\results.txt");
 
         if (Request.Form.Count == prefixFieldsNo)
         {
@@ -63,7 +63,7 @@ public partial class _Default : System.Web.UI.Page
             return;
         }
 
-        StreamReader sr = new StreamReader(Request.PhysicalApplicationPath + "stats.txt");
+        StreamReader sr = new StreamReader(Request.PhysicalApplicationPath + @"\data\stats.txt");
 
         var firstLine = sr.ReadLine();
         var newLine = "";
@@ -87,7 +87,7 @@ public partial class _Default : System.Web.UI.Page
         String s = newLine + firstLine + Environment.NewLine + sr.ReadToEnd();
         sr.Close();
 
-        StreamWriter sw = new StreamWriter(Request.PhysicalApplicationPath + "stats.txt");
+        StreamWriter sw = new StreamWriter(Request.PhysicalApplicationPath + @"\data\stats.txt");
         sw.Write(s);
 
         sw.Flush();
@@ -104,7 +104,7 @@ public partial class _Default : System.Web.UI.Page
 
         string[] lineData;
         var stat = 0;
-        StreamReader sr = new StreamReader(Request.PhysicalApplicationPath + "stats.txt");
+        StreamReader sr = new StreamReader(Request.PhysicalApplicationPath + @"\data\stats.txt");
         while(!sr.EndOfStream){
             lineData = sr.ReadLine().Split('\t');
             stat = Convert.ToInt32(lineData[4].Remove(0, 1));
@@ -151,7 +151,7 @@ public partial class _Default : System.Web.UI.Page
 
     private String getNextXlsToken() 
     {
-        var xlsFiles = File.ReadAllLines(Request.PhysicalApplicationPath + "input.txt");
+        var xlsFiles = File.ReadAllLines(Request.PhysicalApplicationPath + @"\data\input.txt");
         var randomXls = new Random().Next(0, xlsFiles.Length);
         var line = xlsFiles[randomXls];
 
