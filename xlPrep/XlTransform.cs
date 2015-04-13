@@ -25,17 +25,17 @@ namespace xlPrep
                 {
                     try
                     {
-                        System.Diagnostics.Debug.WriteLine("Processing " + file);
+                        Console.WriteLine("Processing " + file);
                         i++;
                         //if (i > 50) //TODO: remove, just for testing
                         //{
                         //    return;
                         //}
 
-                        excelReader.Read(file);
+                        var excelfile = excelReader.GemBoxLoad(file);
 
                         //Seperate worksheets in different files
-                        foreach (var sheet in excelReader.GemboxExcel.Worksheets)
+                        foreach (var sheet in excelfile.Worksheets)
                         {
                             cellCounter = 0;
 
@@ -104,7 +104,7 @@ namespace xlPrep
                                 singleXls.Save(savePath, SaveOptions.XlsxDefault);
                                 if (!addFormatRule(savePath))
                                 {
-                                    System.Diagnostics.Debug.WriteLine("Error adding format rule to " + savePath);
+                                    Console.WriteLine("Error adding format rule to " + savePath);
                                     File.Delete(savePath);
                                 }
                             }
@@ -112,15 +112,15 @@ namespace xlPrep
                     }
                     catch (Exception e)
                     {   //continue to the next file
-                        System.Diagnostics.Debug.WriteLine("Error processing " + file + ": " + e.Message + e.InnerException);
+                        Console.WriteLine("Error processing " + file + ": " + e.Message + e.InnerException);
                     }
                 }
             }
             catch (DirectoryNotFoundException e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message + e.InnerException);
+                Console.WriteLine(e.Message + e.InnerException);
             }
-            System.Diagnostics.Debug.WriteLine("Analyzed " + i + " files.");
+            Console.WriteLine("Analyzed " + i + " files.");
         }
 
         public Boolean addFormatRule(String path)
@@ -159,7 +159,7 @@ namespace xlPrep
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message + e.InnerException);
+                Console.WriteLine(e.Message + e.InnerException);
                 return false;
             }
 
