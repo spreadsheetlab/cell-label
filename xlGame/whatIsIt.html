@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>What Is It</title>
+    <title>What is in an XL?</title>
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
@@ -95,7 +95,7 @@
                             <form class="form-inline" role="form" id="DivUpdated">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" id ="CheckUpdated" checked> Keep me updated
+                                        <input type="checkbox" id="CheckUpdated" checked> Keep me updated
                                     </label>
                                 </div>
                             </form>
@@ -111,7 +111,7 @@
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
             <div class="navbar-headhttp://localhost:56023/images/examples/ex1_q.pnger">
-                <a class="navbar-brand" href="#">Spreadsheet labelling project</a>
+                <a class="navbar-brand" href="#">Spreadsheet analysis project</a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
@@ -123,15 +123,22 @@
     <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-8" style="width: 1020px">
-            <h1><span id="questionHeader">Loading&hellip;</span><span class="text-muted" id="questionExp" style="font-size:large" hidden>Click all cells that apply</span></h1>
+            <h1><span id="questionHeader">Loading&hellip;</span><span class="text-muted" id="questionExp" style="font-size:large" hidden>Select ther most relevant</span></h1>
             <br />
             <form class="form-inline" role="form">
                 <div class="form-group">
-                    <label id="results" class="text-success" style="font-size:larger"></label>
-                    <label id="lblSkip" class="text-muted" for="txtSkip"></label>
-                    <input id="txtSkip" class="form-control" type="text" placeholder="Enter reason" />
+                    <label class="text-success" style="font-size:larger">It is </label>
+                    <select class="form-control" id="result" onchange="resultChanged()">
+                        <option disabled selected value="-1"> -- Type -- </option>
+                        <option value="one">One</option>
+                        <option value="two">Two</option>
+                        <option value="three">Three</option>
+                        <option value="four">Four</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <input type="text" class="form-control" id="txtOther" />
+                    <button type="button" class="btn btn-default" onclick="btnNextClick()">Next <span class="glyphicon glyphicon-forward"></span></button>
                 </div>
-                <button type="button" class="btn btn-default" onclick="btnNextClick()">Next <span class="glyphicon glyphicon-forward"></span></button>
             </form>
             <br />
             <div id="excelDivParent">
@@ -145,38 +152,38 @@
                 <img id="smiley" src="images/smileys/smiley_0.jpg" width="200px" style="border:none" />
             </div>
             <div class="row">
-                </div>
-                <div class="row" style="padding:10px">
-                    <table class="table table-condensed table-bordered table-striped">
-                        <tr class="info">
-                            <th><div id="scoreLabel">your score</div></th>
-                            <th>totals</th>
-                        </tr>
-                        <tr>
-                            <td rowspan="4" class="vcenter2"><span class="label label-primary" id="noOfLabels" style="font-size:xx-large">0</span></td>
-                            <td><span class="badge" id="statsDay"></span> today</td>
-                        </tr>
-                        <tr><td><span class="badge" id="statsWeek"></span> this week</td></tr>
-                        <tr><td><span class="badge" id="statsMonth"></span> this month</td></tr>
-                        <tr><td><span class="badge" id="statsYear"></span> this year</td></tr>
-                    </table>
-                </div>
-                <div class="row" style="text-align:center">
-                    <a href="http://spreadsheetlab.org/" target="_blank">
-                        <img src="images/spLab.png" style="margin:15px" />
-                    </a>
-                </div>
-                <div class="row" style="text-align:center">
-                    <a href="http://swerl.tudelft.nl/bin/view/Main/WebHome" target="_blank">
-                        <img src="images/serg-logo-color.png" style="margin:15px" />
-                    </a>
-                </div>
-                <div class="row" style="text-align:center">
-                    <a href="http://www.tudelft.nl/" target="_blank">
-                        <img src="images/TU-Delft_logo.gif" style="margin:15px" />
-                    </a>
-                </div>
             </div>
+            <div class="row" style="padding:10px">
+                <table class="table table-condensed table-bordered table-striped">
+                    <tr class="info">
+                        <th><div id="scoreLabel">your score</div></th>
+                        <th>totals</th>
+                    </tr>
+                    <tr>
+                        <td rowspan="4" class="vcenter2"><span class="label label-primary" id="noOfLabels" style="font-size:xx-large">0</span></td>
+                        <td><span class="badge" id="statsDay"></span> today</td>
+                    </tr>
+                    <tr><td><span class="badge" id="statsWeek"></span> this week</td></tr>
+                    <tr><td><span class="badge" id="statsMonth"></span> this month</td></tr>
+                    <tr><td><span class="badge" id="statsYear"></span> this year</td></tr>
+                </table>
+            </div>
+            <div class="row" style="text-align:center">
+                <a href="http://spreadsheetlab.org/" target="_blank">
+                    <img src="images/spLab.png" style="margin:15px" />
+                </a>
+            </div>
+            <div class="row" style="text-align:center">
+                <a href="http://swerl.tudelft.nl/bin/view/Main/WebHome" target="_blank">
+                    <img src="images/serg-logo-color.png" style="margin:15px" />
+                </a>
+            </div>
+            <div class="row" style="text-align:center">
+                <a href="http://www.tudelft.nl/" target="_blank">
+                    <img src="images/TU-Delft_logo.gif" style="margin:15px" />
+                </a>
+            </div>
+        </div>
     </div>
 </body>
 </html>
