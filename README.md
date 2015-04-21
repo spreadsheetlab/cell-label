@@ -23,7 +23,8 @@ WL.login({ "scope": "wl.skydrive" }).then(
 );
 
 function getFiles() {
-    var files_path = "folder.072e74b1abfc5464.72E74B1ABFC5464!190/files";
+    var files_path = "folder.072e74b1abfc5464.72E74B1ABFC5464!190/files"; //for the corpus folder, https://onedrive.live.com/?cid=072E74B1ABFC5464&id=72e74b1abfc5464%21190
+//  var files_path = "folder.072e74b1abfc5464.72E74B1ABFC5464!2724/files"; //for the whatisit folder, https://onedrive.live.com/?cid=072E74B1ABFC5464&id=72E74B1ABFC5464%212724
     WL.api({ path: files_path, method: "GET" }).then(
         onGetFilesComplete,
         function(response) {

@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>What Is It</title>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="xlGame.css">
+</head>
+<body>
+    <div class="modal fade" id="welcomeModal" tabindex="-1" role="dialog" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="welcomeModalLabel">Welcome to the spreadsheet labelling game!</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>This is how you play: Each challenge involves a random worksheet and a cell, marked in <span class="label label-warning">orange</span></p>
+                            <p>Your task is to click on the cells that describe or label it. Here are some examples:</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                                <ol class="carousel-indicators">
+                                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                                    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                                    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                                </ol>
+                                <div class="carousel-inner">
+                                    <div class="item active">
+                                        <div class="row" style="text-align:center">
+                                            <div class="col-md-5 vcenter">
+                                                <img src="images/examples/ex1_q.png" style="width:100%" />
+                                            </div>
+                                            <div class="col-md-1 vcenter">
+                                                <span class="glyphicon glyphicon-arrow-right"></span>
+                                            </div>
+                                            <div class="col-md-5 vcenter">
+                                                <img src="images/examples/ex1_a.png" style="width:100%" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="row" style="text-align:center">
+                                            <div class="col-md-5 vcenter">
+                                                <img src="images/examples/ex2_q.png" style="width:100%" />
+                                            </div>
+                                            <div class="col-md-1 vcenter">
+                                                <span class="glyphicon glyphicon-arrow-right"></span>
+                                            </div>
+                                            <div class="col-md-5 vcenter">
+                                                <img src="images/examples/ex2_a.png" style="width:100%" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="row">
+                                            <div class="col-md-7 vcenter"><img src="images/examples/ex_lbl.png" style="width: 100%" /></div>
+                                            <div class="col-md-4 vcenter"><div class="alert alert-warning">The cell cannot labelled. Fill in something like: <img src="images/examples/ex_lbl_resp.png" style="width: 100%; padding: 5px" /></div> </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                                    <span class="glyphicon glyphicon-chevron-left"></span>
+                                </a>
+                                <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                                    <span class="glyphicon glyphicon-chevron-right"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <br />
+                            <p>Your score is calculated based on the number of labels that you identify.</p>
+                            <form class="form-inline" role="form">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="CheckKeep" onclick="$('#DivEmail').toggle(); $('#DivUpdated').toggle();" checked> Keep my score
+                                    </label>
+                                </div>
+                                <div class="form-group" id="DivEmail">
+                                    <label class="sr-only" for="exampleInputEmail2">Email</label>
+                                    <input type="email" class="form-control" id="InputEmail" placeholder="Email">
+                                </div>
+                            </form>
+                            <form class="form-inline" role="form" id="DivUpdated">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id ="CheckUpdated" checked> Keep me updated
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success btn-lg" data-dismiss="modal">Got it! Let's start <span class="glyphicon glyphicon-forward"></span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-headhttp://localhost:56023/images/examples/ex1_q.pnger">
+                <a class="navbar-brand" href="#">Spreadsheet labelling project</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" data-toggle="modal" data-target="#welcomeModal">Welcome me again</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="width: 1020px">
+            <h1><span id="questionHeader">Loading&hellip;</span><span class="text-muted" id="questionExp" style="font-size:large" hidden>Click all cells that apply</span></h1>
+            <br />
+            <form class="form-inline" role="form">
+                <div class="form-group">
+                    <label id="results" class="text-success" style="font-size:larger"></label>
+                    <label id="lblSkip" class="text-muted" for="txtSkip"></label>
+                    <input id="txtSkip" class="form-control" type="text" placeholder="Enter reason" />
+                </div>
+                <button type="button" class="btn btn-default" onclick="btnNextClick()">Next <span class="glyphicon glyphicon-forward"></span></button>
+            </form>
+            <br />
+            <div id="excelDivParent">
+                <div id="excelDiv"></div>
+            </div>
+            <script type="text/javascript" src="http://r.office.microsoft.com/r/rlidExcelWLJS?v=1&kip=1"></script>
+            <script type="text/javascript" src="whatisit.js"></script>
+        </div>
+        <div class="col-md-2">
+            <div class="row">
+                <img id="smiley" src="images/smileys/smiley_0.jpg" width="200px" style="border:none" />
+            </div>
+            <div class="row">
+                </div>
+                <div class="row" style="padding:10px">
+                    <table class="table table-condensed table-bordered table-striped">
+                        <tr class="info">
+                            <th><div id="scoreLabel">your score</div></th>
+                            <th>totals</th>
+                        </tr>
+                        <tr>
+                            <td rowspan="4" class="vcenter2"><span class="label label-primary" id="noOfLabels" style="font-size:xx-large">0</span></td>
+                            <td><span class="badge" id="statsDay"></span> today</td>
+                        </tr>
+                        <tr><td><span class="badge" id="statsWeek"></span> this week</td></tr>
+                        <tr><td><span class="badge" id="statsMonth"></span> this month</td></tr>
+                        <tr><td><span class="badge" id="statsYear"></span> this year</td></tr>
+                    </table>
+                </div>
+                <div class="row" style="text-align:center">
+                    <a href="http://spreadsheetlab.org/" target="_blank">
+                        <img src="images/spLab.png" style="margin:15px" />
+                    </a>
+                </div>
+                <div class="row" style="text-align:center">
+                    <a href="http://swerl.tudelft.nl/bin/view/Main/WebHome" target="_blank">
+                        <img src="images/serg-logo-color.png" style="margin:15px" />
+                    </a>
+                </div>
+                <div class="row" style="text-align:center">
+                    <a href="http://www.tudelft.nl/" target="_blank">
+                        <img src="images/TU-Delft_logo.gif" style="margin:15px" />
+                    </a>
+                </div>
+            </div>
+    </div>
+</body>
+</html>
