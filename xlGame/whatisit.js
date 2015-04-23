@@ -30,7 +30,7 @@ $('#welcomeModal').modal({
 })
 
 function initCollectors() {
-    $('#result').val = "-1";
+    $("#result").val('-1');
     resultChanged();
     $("#questionHeader").html("Of what type is workbook <span class=\"label label-warning\">" + xlsToken.split("#")[0] + "</span>?");
     $("#questionExp").show();
@@ -58,12 +58,20 @@ function btnNextClick() {
 }
 
 function updateSmiley() {
-    ($('#result').val != "-1" || $("#txtOther").val().length > 0) ? smileyScore++ : smileyScore--;
+    if ($('#result').val() == null || $('#result').val() == '-1' || ($('#result').val() == "other" && $("#txtOther").val().length == 0)) {
+        smileyScore--;
+    }
+    else {
+        smileyScore++;
+        userScore++;
+    }
 
     var evenScore = Math.ceil(smileyScore / 2.0) * 2;
     if (evenScore >= -6 && evenScore <= 12) {
         $("#smiley").attr("src", "images/smileys/smiley_" + evenScore + ".jpg");
     }
+
+    $("#noOfLabels").html(userScore);
 }
 
 function postData(data) {
@@ -104,13 +112,6 @@ function onExcelLoaded(result) {
     ewa = Ewa.EwaControl.getInstances().getItem(Ewa.EwaControl.getInstances().getCount() - 1);
     workbook = ewa.getActiveWorkbook();
     initCollectors();
-}
-
-function updateLabels(asyncResult) { //FENIA! htan sto onCellSelectionChange
-
-        userScore++;
-    
-    $("#noOfLabels").html(userScore);
 }
 
 function resultChanged() {
