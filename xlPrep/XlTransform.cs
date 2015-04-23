@@ -23,7 +23,7 @@ namespace xlPrep
 
             try
             {
-                foreach (var file in Directory.EnumerateFiles(inputPath, "*.xls*", SearchOption.AllDirectories))
+                foreach (var file in Directory.EnumerateFiles(inputPath, "*.xls*", System.IO.SearchOption.AllDirectories))
                 {
                     try
                     {

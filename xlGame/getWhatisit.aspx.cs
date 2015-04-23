@@ -31,7 +31,7 @@ public partial class _Default : System.Web.UI.Page
                 + "email:" + userEmail + "\t"
                 + xlsToken + "\t"
                 + spreadsheet + "\t"
-                + "skip:" + skipExpl + "\t"
+                + "other:" + skipExpl + "\t"
                 + response;
 
             StreamWriter sw = File.AppendText(Request.PhysicalApplicationPath + @"\whatisitData\results.txt");
