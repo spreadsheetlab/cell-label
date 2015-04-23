@@ -32,7 +32,7 @@ $('#welcomeModal').modal({
 function initCollectors() {
     $("#result").val('-1');
     resultChanged();
-    $("#questionHeader").html("Of what type is workbook <span class=\"label label-warning\">" + xlsToken.split("#")[0] + "</span>?");
+    $("#questionHeader").html("Of what type is <span class=\"label label-warning\">" + xlsToken.split("#")[0] + "</span>?");
     $("#questionExp").show();
 }
 
