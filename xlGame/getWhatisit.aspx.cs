@@ -6,7 +6,6 @@ public partial class _Default : System.Web.UI.Page
 {
     private const String oneDriveFileTokenPrefix = "SD";
     private const String oneDriveFileTokenSuffix = "/517479313637659748/t=0&s=0";
-    private const int prefixFieldsNo = 4;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -26,41 +25,29 @@ public partial class _Default : System.Web.UI.Page
         string skipExpl = "\"" + removeBreakChars(Request.Form[2]) + "\"";
         string userEmail = removeBreakChars(Request.Form[3]);
         string clientIP = getClientIPAddress();
-        string linePrefix = DateTime.Now + "\t"
+        string response = Request.Form[4];
+        string line = DateTime.Now + "\t"
                 + clientIP + "\t"
                 + "email:" + userEmail + "\t"
                 + xlsToken + "\t"
                 + spreadsheet + "\t"
-                + "skip:" + skipExpl;
+                + "skip:" + skipExpl + "\t"
+                + response;
 
-        StreamWriter sw = File.AppendText(Request.PhysicalApplicationPath + @"\whatisitData\results.txt");
+            StreamWriter sw = File.AppendText(Request.PhysicalApplicationPath + @"\whatisitData\results.txt");
+            sw.WriteLine(line);
 
-        if (Request.Form.Count == prefixFieldsNo)
-        {
-            sw.WriteLine(linePrefix);
-        }
-        else
-        {
-            for (int i = prefixFieldsNo; i < Request.Form.Count; i++)
+            if (response != "" && (response != "other" || Request.Form[2] != ""))
             {
-                var commaIndex = Request.Form[i].IndexOf(',');
-                sw.WriteLine(linePrefix + "\t"
-                    + removeBreakChars(Request.Form[i]).Insert(commaIndex, "\t").Remove(commaIndex + 1, 1));
+                updateStatistics();
             }
-            updateStatistics(Request.Form.Count - prefixFieldsNo);
-        }
-        
-        sw.Flush();
-        sw.Close();
+
+            sw.Flush();
+            sw.Close();
     }
 
-    private void updateStatistics(int newLabels)
+    private void updateStatistics()
     {
-        if (newLabels == 0)
-        {
-            return;
-        }
-
         StreamReader sr = new StreamReader(Request.PhysicalApplicationPath + @"\whatisitData\stats.txt");
 
         var firstLine = sr.ReadLine();
@@ -70,7 +57,7 @@ public partial class _Default : System.Web.UI.Page
         if (now.DayOfYear.ToString() == firstLine.Split('\t')[3])
         {
             var tmp = firstLine.Split('#');
-            firstLine = tmp[0] + "#" + (newLabels + Convert.ToInt32(tmp[1]));
+            firstLine = tmp[0] + "#" + (1 + Convert.ToInt32(tmp[1]));
         }
         else
         {
@@ -78,7 +65,7 @@ public partial class _Default : System.Web.UI.Page
                 + "\t" + now.Month.ToString()
                 + "\t" + System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetWeekOfYear(now, System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Monday).ToString()
                 + "\t" + now.DayOfYear.ToString()
-                + "\t#" + newLabels.ToString()
+                + "\t#1"
                 + Environment.NewLine; 
         }
 
