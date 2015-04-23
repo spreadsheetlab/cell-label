@@ -3,6 +3,8 @@ using GemBox.Spreadsheet;
 using Infotron.PerfectXL.SmellAnalyzer;
 using System.IO;
 using Microsoft.Office.Interop.Excel;
+using System.Collections.Generic;
+using Microsoft.VisualBasic.FileIO;
 
 namespace xlPrep
 {
@@ -176,5 +178,49 @@ namespace xlPrep
             fc.Borders[XlBordersIndex.xlEdgeTop].Color = borderColor;
         }
 
+        //helper method for using a CSV with lines "clusterName", "filename", "clusterName_Filename" to
+        //get filesPerCluster files from each cluster from the filesPath to the outputPath
+        private void copyCSVFiles(String filesPath, String outputPath, String CSVPath, int filesPerCluster)
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+
+            var parserExp = new TextFieldParser(CSVPath) { TextFieldType = FieldType.Delimited };
+            parserExp.SetDelimiters(",");
+
+            for (int i = 0; !parserExp.EndOfData; i++)
+            {
+                var fieldsExp = parserExp.ReadFields();
+                dict.Add(fieldsExp[1], fieldsExp[2]);
+            }
+
+            for (int i = 0; i < 15; i++)
+            {
+                Directory.CreateDirectory(Path.Combine(outputPath, i.ToString()));
+            }
+
+            foreach (var file in Directory.EnumerateFiles(filesPath))
+            {
+                var filenameWithoutExtension = Path.GetFileNameWithoutExtension(file);
+                if (dict.ContainsKey(filenameWithoutExtension))
+                {
+                    File.Copy(file, Path.Combine(outputPath, Path.GetFileNameWithoutExtension(dict[filenameWithoutExtension]).Split('_')[0], Path.GetFileName(file)));
+                }
+            }
+
+            for (int i = 0; i < 15; i++)
+            {
+                var ithDirectory = Path.Combine(outputPath, i.ToString());
+                Random rnd = new Random();
+                while (Directory.GetFiles(ithDirectory).Length > filesPerCluster)
+                {
+                    File.Delete(Directory.GetFiles(ithDirectory)[rnd.Next(1, Directory.GetFiles(ithDirectory).Length - 1)]);
+
+                }
+                foreach (var file in Directory.EnumerateFiles(ithDirectory))
+                {
+                    File.Copy(file, Path.Combine(outputPath, Path.GetFileName(file)));
+                }
+            }
+        }
     }
 }

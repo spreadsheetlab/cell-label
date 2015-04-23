@@ -35,6 +35,7 @@
     <Reference Include="GemBox.Spreadsheet">
       <HintPath>..\..\infotron\lib\GemBox.Spreadsheet.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="PerfectXLCore">
       <HintPath>..\..\infotron\AnalyzerCore\bin\Debug\PerfectXLCore.dll</HintPath>
     </Reference>
