@@ -2,6 +2,7 @@
 var ewa = null; //the Excel Services Web Part
 var workbook = null //the active workbook
 var questionCell = null; //the cell to be labeled
+var qCell = null;
 var labels = []; //list with the labels the user has clicked, each represented as a tuple eg "C3, value"
 var remainingCells; //the number of cells to be labeled before changing workbook
 var useremail = "";
@@ -84,8 +85,13 @@ function postData(data, changeXls) {
     posting.done(function (resp) {
         if (changeXls) {
             xlsToken = resp.xls;
+            qCell =
+                {
+                    row: resp.row,
+                    column: resp.column
+                };
             loadExcel(xlsToken);
-            remainingCells = Math.floor(Math.random() * 3) + 2; //number of tries before worksheet change, 2 to 2+(3-1) = 4
+            remainingCells = 0;//Math.floor(Math.random() * 3) + 2; //number of tries before worksheet change, 2 to 2+(3-1) = 4
         }
         $("#statsDay").html(resp.statsDay);
         $("#statsWeek").html(resp.statsWeek);
@@ -125,17 +131,13 @@ function onExcelLoaded(result) {
 }
 
 function selectQuestionCell() {
-    var qCell = randomCell();
     questionCell = workbook.getRange(workbook.getActiveSheet().getName(), qCell.row, qCell.column, 1, 1);
     questionCell.getValuesAsync(1, checkNonEmpty, null);
 }
 
 function checkNonEmpty(asyncResult) {
-    var value = asyncResult.getReturnValue()[0][0];
-    if (value == "") {
-        //select another cell
-        selectQuestionCell();
-    } else {
+        var value = asyncResult.getReturnValue()[0][0];
+
         //set value to hidden!A1 to make confitional formatting color the ewaCell
         var qCellContent = asyncResult.getReturnValue()[0][0];
         if (qCellContent.length > 35) {
@@ -144,7 +146,6 @@ function checkNonEmpty(asyncResult) {
         workbook.getRangeA1Async("hidden!A1", setHiddenValue, questionCell.getAddressA1() + ",");
         $("#questionHeader").html("What describes <span class=\"label label-warning\">" + qCellContent + "</span> in " + questionCell.getAddressA1().split("!")[1] + "?");
         $("#questionExp").show();
-    }
 }
 
 // Handle the active cell changed event.

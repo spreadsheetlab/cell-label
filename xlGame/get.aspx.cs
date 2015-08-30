@@ -145,19 +145,84 @@ public partial class _Default : System.Web.UI.Page
 
     private void sendNextChallenge()
     {
-        var xls = getNextXlsToken();
-        Response.Write("{ \"xls\": \"" + xls + "\" ,");
+        var challenge = getNextChallenge();
+        Response.Write("{ \"xls\": \"" + challenge.Item1 + "\" ,");
+        Response.Write(" \"column\": \"" + challenge.Item2.Item1 + "\" ,");
+        Response.Write(" \"row\": \"" + challenge.Item2.Item2 + "\" ,");
     }
 
-    private String getNextXlsToken() 
+    private Tuple<String, Tuple<int, int>> getNextChallenge() 
     {
         var xlsFiles = File.ReadAllLines(Request.PhysicalApplicationPath + @"\data\input.txt");
         var randomXls = new Random().Next(0, xlsFiles.Length);
         var line = xlsFiles[randomXls];
+        var split = line.Split('\t');
 
-        //from line="myTest.xlsx#file.072e74b1abfc5464.72E74B1ABFC5464!197"
-        //return spToken = "SD72E74B1ABFC5464!197/517479313637659748/t=0&s=0";
-        return oneDriveFileTokenPrefix + line.Split('#')[1].Split('.')[2] + oneDriveFileTokenSuffix;
+        return new Tuple<string, Tuple<int, int>>(split[0], ConvertToInt(split[1]));
+    }
+
+    static public Tuple<int, int> ConvertToInt(String s)
+    {
+        int Column;
+        int Row;
+
+        int FinalLetter = GetFinalLetter(s);
+
+        int teller = 0;
+        //doorloop de letters
+
+        int Total = 0;
+        int r = (int)Math.Pow(26, (FinalLetter - 1)); //base 26
+
+        while (teller < FinalLetter)
+        {
+            Total = Total + r * ((int)s[teller] - 64);
+            r = r / 26;
+            teller++;
+        }
+
+        int TotalChars = Total - 1;
+
+        //doorloop de cijfers
+        Total = 0;
+
+        r = (int)Math.Pow(10, (s.Length - FinalLetter - 1)); //base 10
+
+        while (teller < s.Length)
+        {
+            Total = Total + r * ((int)s[teller] - 48);
+            r = r / 10;
+            teller++;
+        }
+
+        int TotalDigits = Total - 1;
+
+        if (TotalChars < 0)
+        {
+            throw new ArgumentOutOfRangeException("Column value below zero");
+        }
+        else
+        {
+            Column = TotalChars;
+        }
+
+        if (TotalDigits < 0)
+        {
+            throw new ArgumentOutOfRangeException("Row value below zero");
+        }
+        else
+        {
+            Row = TotalDigits;
+        }
+
+        return new Tuple<int,int>(Column, Row);
+    }
+
+    private static int GetFinalLetter(String s)
+    {
+        char[] cijfers = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
+        var lastChar = s.IndexOfAny(cijfers);
+        return lastChar;
     }
 
     private string getClientIPAddress()
